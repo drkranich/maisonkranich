@@ -168,5 +168,4 @@ export default async function HomePage() {
 
       <Footer />
     </div>
-  );
-}
+ 

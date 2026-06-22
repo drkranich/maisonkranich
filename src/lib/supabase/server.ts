@@ -22,15 +22,4 @@ export async function createClient() {
       getAll() {
         return cookieStore.getAll();
       },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        } catch {
-          // chamado de um Server Component — ignorável quando há middleware de refresh
-        }
-      },
-    },
-  });
-}
+ 
