@@ -28,15 +28,13 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Textura sutil de papel/escuro no fundo da loja */
+/* Textura sutil do ateliê — somente gradientes CSS (sem url()) */
 .bg-atelier {
   background-color: #141210;
-  background-image: radial-gradient(
-      120% 80% at 50% -10%,
-      rgba(201, 163, 106, 0.1) 0%,
-      rgba(17, 17, 17, 0) 55%
-    ),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image:
+    radial-gradient(120% 80% at 50% -10%, rgba(201, 163, 106, 0.1) 0%, rgba(17, 17, 17, 0) 55%),
+    radial-gradient(90% 60% at 100% 0%, rgba(74, 51, 38, 0.18) 0%, rgba(17, 17, 17, 0) 60%),
+    repeating-linear-gradient(45deg, rgba(246, 241, 231, 0.012) 0px, rgba(246, 241, 231, 0.012) 1px, rgba(17, 17, 17, 0) 1px, rgba(17, 17, 17, 0) 3px);
 }
 
 /* Scrollbar discreta dourada */
@@ -74,7 +72,8 @@ body {
 
   /* Card "peça de mobiliário refinado" */
   .mk-card {
-    @apply rounded-xl border border-dourado/12 bg-panel shadow-card;
+    @apply rounded-xl border border-dourado/12 shadow-card;
+    background-image: linear-gradient(165deg, rgba(40, 33, 26, 0.92) 0%, rgba(17, 17, 17, 0.96) 100%);
   }
 
   .mk-kicker {
