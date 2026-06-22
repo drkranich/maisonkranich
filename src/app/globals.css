@@ -81,3 +81,18 @@ body {
 
 /* Card "peça de mobiliário refinado" */
 .mk-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(201, 163, 106, 0.12);
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+  background-image: linear-gradient(165deg, rgba(40, 33, 26, 0.92) 0%, rgba(17, 17, 17, 0.96) 100%);
+}
+
+/* Kicker / sobretítulo */
+.mk-kicker {
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  font-size: 11px;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: rgba(201, 163, 106, 0.8);
+}

@@ -203,4 +203,8 @@ function Mini({ k, v, m, good }: { k: string; v: string; m: string; good?: boole
       <div className="text-[11px] text-marfim/50">{k}</div>
       <div className="mt-1 flex items-baseline justify-between">
         <span className={`font-serif text-xl ${good ? "text-dourado" : "text-marfim"}`}>{v}</span>
-        <span c
+        <span className="text-[11px] text-marfim/45">{m}</span>
+      </div>
+    </div>
+  );
+}
