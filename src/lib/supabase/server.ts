@@ -2,6 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "@/lib/database.types";
 
+// Chaves públicas do Supabase (publishable/anon — seguras para o front).
+// Fallback caso as variáveis de ambiente não estejam definidas no build/runtime.
+const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://nsbxioehvydkazvvbhgq.supabase.co";
+const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  "sb_publishable_wS38W4BHm7dhv2w1Fzoa7Q_9fNrpzMd";
+
 /**
  * Cliente Supabase para Server Components / Route Handlers.
  * Lê e escreve a sessão via cookies (SSR).
@@ -9,24 +17,20 @@ import type { Database } from "@/lib/database.types";
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // chamado de um Server Component — ignorável quando há middleware de refresh
-          }
-        },
+  return createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          );
+        } catch {
+          // chamado de um Server Component — ignorável quando há middleware de refresh
+        }
+      },
+    },
+  });
 }
