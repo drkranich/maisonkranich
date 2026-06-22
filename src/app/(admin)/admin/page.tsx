@@ -35,7 +35,7 @@ const statusTone: Record<string, string> = {
 };
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const [orders, subs, customers] = await Promise.all([
     supabase.from("orders").select("total_cents,created_at"),
     supabase.from("subscriptions").select("id", { count: "exact", head: true }).eq("status", "active"),

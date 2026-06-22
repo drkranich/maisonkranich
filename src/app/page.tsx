@@ -34,7 +34,7 @@ const occasions = [
 ];
 
 export default async function HomePage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data: categories }, { data: collections }] = await Promise.all([
     supabase.from("categories").select("slug,name,description").eq("active", true).order("sort_order").limit(6),
     supabase.from("collections").select("slug,name,story,theme").eq("active", true).order("sort_order").limit(3),

@@ -6,8 +6,8 @@ import type { Database } from "@/lib/database.types";
  * Cliente Supabase para Server Components / Route Handlers.
  * Lê e escreve a sessão via cookies (SSR).
  */
-export function createClient() {
-  const cookieStore = cookies();
+export async function createClient() {
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
