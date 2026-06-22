@@ -42,7 +42,10 @@ export default async function AdminDashboard() {
     supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "customer"),
   ]);
 
-  const orderRows = orders.data ?? [];
+  const orderRows = (orders.data ?? []) as Array<{
+    total_cents: number | null;
+    created_at: string;
+  }>;
   const revenueTotal = orderRows.reduce((s, o) => s + (o.total_cents ?? 0), 0) || demo.revenueTotal;
   const subsActive = subs.count || demo.subsActive;
   const clientsActive = customers.count || demo.clientsActive;
