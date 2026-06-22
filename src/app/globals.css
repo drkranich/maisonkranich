@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   MAISON KRANICH · base
+   ========================================================= */
+:root {
+  --mk-deep: #111111;
+  --mk-carvao: #1b1b1b;
+  --mk-nogueira: #4a3326;
+  --mk-dourado: #c9a36a;
+  --mk-marfim: #f6f1e7;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--mk-deep);
+  color: var(--mk-marfim);
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* Textura sutil de papel/escuro no fundo da loja */
+.bg-atelier {
+  background-color: #141210;
+  background-image: radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(201, 163, 106, 0.1) 0%,
+      rgba(17, 17, 17, 0) 55%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar discreta dourada */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #161310;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#5a4030, #3a2c20);
+  border-radius: 999px;
+  border: 2px solid #161310;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(#7a5a3c, #4a3326);
+}
+
+::selection {
+  background: rgba(201, 163, 106, 0.32);
+  color: #fff;
+}
+
+@layer components {
+  /* Régua / divisor ornamental da marca */
+  .mk-rule {
+    @apply flex items-center justify-center gap-3 text-dourado/70;
+  }
+  .mk-rule::before,
+  .mk-rule::after {
+    content: "";
+    @apply h-px w-16 bg-gradient-to-r from-transparent via-dourado/50 to-transparent;
+  }
+
+  /* Card "peça de mobiliário refinado" */
+  .mk-card {
+    @apply rounded-xl border border-dourado/12 bg-panel shadow-card;
+  }
+
+  .mk-kicker {
+    @apply font-sans text-[11px] uppercase tracking-wide2 text-dourado/80;
+  }
+}
