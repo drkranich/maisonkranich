@@ -11,6 +11,9 @@
   --mk-nogueira: #4a3326;
   --mk-dourado: #c9a36a;
   --mk-marfim: #f6f1e7;
+  --font-playfair: "Playfair Display", Georgia, serif;
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-inter: Inter, "Segoe UI", system-ui, sans-serif;
 }
 
 * {
