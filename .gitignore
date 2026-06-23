@@ -8,8 +8,12 @@ out
 .vercel
 next-env.d.ts
 
-# Cloudflare / OpenNext
+# OpenNext
 .open-next
+
+# wrangler files
 .wrangler
-.dev.vars
-cloudflare-env.d.ts
+.dev.vars*
+!.dev.vars.example
+
+!.env.example

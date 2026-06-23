@@ -2,8 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
   "name": "maisonkranich",
-  "account_id": "61955511b733438c74400b75621669aa",
-  "compatibility_date": "2026-06-22",
+  "compatibility_date": "2026-06-23",
   "compatibility_flags": [
     "nodejs_compat"
   ],
