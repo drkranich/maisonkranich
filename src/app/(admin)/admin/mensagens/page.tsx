@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { dateBR } from "@/lib/format";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
@@ -31,6 +32,11 @@ export default async function AdminMensagens() {
           { key: "subject", label: "Assunto", render: (r) => (r.subject as string) || "Conversa" },
           { key: "status", label: "Status", render: (r) => <Pill tone={tone[r.status as string] ?? "neutral"}>{label[r.status as string] ?? (r.status as string)}</Pill> },
           { key: "last_message_at", label: "Última msg", render: (r) => (r.last_message_at ? dateBR(r.last_message_at as string) : "—") },
+          { key: "abrir", label: "", render: (r) => (
+            <Link href={`/admin/mensagens/${r.id}`} className="rounded-md border border-dourado/30 px-3 py-1.5 text-[10px] uppercase tracking-brand text-dourado hover:bg-dourado/10">
+              Abrir
+            </Link>
+          ) },
         ]}
       />
     </>

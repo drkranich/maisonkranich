@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
 import { dateBR } from "@/lib/format";
 import { PageTitle, EmptyState } from "@/components/account/AccountUI";
+import { NewConversation } from "@/components/chat/NewConversation";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export default async function ConversasPage() {
   return (
     <>
       <PageTitle title="Minhas Conversas" subtitle="Ateliê de Conversas — fale com a nossa equipe." />
+      <NewConversation />
       {!convos || convos.length === 0 ? (
         <EmptyState
           icon={MessagesSquare}
