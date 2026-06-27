@@ -45,12 +45,7 @@ export default async function HomePage() {
       <Header />
 
       {/* HERO + Configurador lado a lado (como a referência) */}
-      <div className="relative">
-        <Hero />
-        <div className="mx-auto -mt-16 max-w-[1400px] px-6 pb-4 lg:absolute lg:right-0 lg:top-24 lg:mt-0 lg:w-[440px] lg:pb-0 lg:pr-6">
-          <BoxBuilder />
-        </div>
-      </div>
+      <Hero aside={<BoxBuilder />} />
 
       {/* Faixa de diferenciais */}
       <section className="border-y border-dourado/12 bg-musgo/30">
