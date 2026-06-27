@@ -99,3 +99,21 @@ body {
   letter-spacing: 0.28em;
   color: rgba(201, 163, 106, 0.8);
 }
+
+/* Inputs da marca */
+.mk-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(201, 163, 106, 0.18);
+  background-color: rgba(17, 17, 17, 0.6);
+  padding: 0.7rem 0.85rem 0.7rem 2.25rem;
+  font-size: 0.9rem;
+  color: #f6f1e7;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mk-input::placeholder { color: rgba(246, 241, 231, 0.35); }
+.mk-input:focus {
+  border-color: rgba(201, 163, 106, 0.55);
+  box-shadow: 0 0 0 3px rgba(201, 163, 106, 0.12);
+}
