@@ -17,6 +17,16 @@ export async function requireUser() {
   return user;
 }
 
+const STAFF_ROLES = ["owner", "admin", "curator", "support"];
+
+/** Exige que o usuário seja staff (acesso ao /admin). */
+export async function requireStaff() {
+  const profile = await getProfile();
+  if (!profile) redirect("/entrar");
+  if (!STAFF_ROLES.includes(profile.role as string)) redirect("/conta");
+  return profile;
+}
+
 /** Perfil + papel do usuário atual. */
 export async function getProfile() {
   const supabase = await createClient();

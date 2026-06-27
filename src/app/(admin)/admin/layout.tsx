@@ -1,11 +1,23 @@
 import { Sidebar } from "@/components/admin/Sidebar";
 import { Bell, MessageSquare, Search } from "lucide-react";
+import { requireStaff } from "@/lib/auth";
 
-export default function AdminLayout({
+const roleLabels: Record<string, string> = {
+  owner: "Superadministrador",
+  admin: "Administrador",
+  curator: "Curador(a)",
+  support: "Atendimento",
+};
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const profile = await requireStaff();
+  const name = profile.full_name || profile.email || "Equipe";
+  const roleLabel = roleLabels[profile.role as string] ?? "Administrador";
+
   return (
     <div className="flex bg-atelier">
       <div className="sticky top-0 hidden lg:block">
@@ -36,11 +48,13 @@ export default function AdminLayout({
               </span>
             </button>
             <div className="flex items-center gap-3 border-l border-dourado/12 pl-5">
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-dourado to-bronze" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-dourado to-bronze text-xs font-semibold text-carvao-deep">
+                {name.charAt(0).toUpperCase()}
+              </div>
               <div className="leading-tight">
-                <div className="text-sm text-marfim">Camila Kranich</div>
+                <div className="text-sm text-marfim">{name.split(" ")[0]}</div>
                 <div className="text-[10px] uppercase tracking-brand text-dourado/70">
-                  Administrador
+                  {roleLabel}
                 </div>
               </div>
             </div>
