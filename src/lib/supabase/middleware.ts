@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Rotas privadas → exige login
-  if (!user && (path.startsWith("/conta") || path.startsWith("/admin"))) {
+  if (!user && (path.startsWith("/conta") || path.startsWith("/admin") || path.startsWith("/checkout"))) {
     const url = request.nextUrl.clone();
     url.pathname = "/entrar";
     url.searchParams.set("next", path);

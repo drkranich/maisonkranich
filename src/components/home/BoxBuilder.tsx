@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Box, Sparkles, Gift, Ribbon, Tag, Mail, Flower2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { builderSteps, lexicon } from "@/lib/brand";
 import { brl } from "@/lib/format";
+import { useCart } from "@/lib/cart/CartContext";
 
 type Product = {
   id: string;
+  slug?: string;
   name: string;
   price_cents: number;
   short_desc: string | null;
@@ -35,15 +38,29 @@ const fallbackBoxes: Product[] = [
 ];
 
 export function BoxBuilder() {
+  const router = useRouter();
+  const { add } = useCart();
   const [step, setStep] = useState(0);
   const [boxes, setBoxes] = useState<Product[]>(fallbackBoxes);
   const [selected, setSelected] = useState<Product | null>(null);
+
+  function addSelectedToCart() {
+    if (!selected) return;
+    add({
+      productId: selected.id,
+      slug: (selected as { slug?: string }).slug ?? selected.id,
+      name: selected.name,
+      kind: "box",
+      price_cents: selected.price_cents,
+    });
+    router.push("/composicao");
+  }
 
   useEffect(() => {
     const supabase = createClient();
     supabase
       .from("products")
-      .select("id,name,price_cents,short_desc,attributes")
+      .select("id,slug,name,price_cents,short_desc,attributes")
       .eq("kind", "box")
       .eq("active", true)
       .order("featured", { ascending: false })
@@ -160,10 +177,11 @@ export function BoxBuilder() {
           <div className="font-serif text-xl text-dourado">{brl(total)}</div>
         </div>
         <button
+          onClick={addSelectedToCart}
           disabled={!selected}
           className="rounded-md bg-gradient-to-b from-dourado to-bronze px-7 py-3 text-[12px] font-sans uppercase tracking-brand text-carvao-deep shadow-glow transition disabled:opacity-40"
         >
-          {selected ? "Continuar" : lexicon.addToBox}
+          {selected ? lexicon.addToBox : "Escolha uma caixa"}
         </button>
       </div>
     </div>

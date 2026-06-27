@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Heart, ShoppingBag, User, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { useCart } from "@/lib/cart/CartContext";
 
 const nav = [
   { label: "Home", href: "/" },
@@ -18,6 +19,7 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { count } = useCart();
   return (
     <header className="sticky top-0 z-50 border-b border-dourado/12 bg-carvao-deep/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4">
@@ -52,9 +54,11 @@ export function Header() {
             className="relative text-marfim/75 hover:text-dourado"
           >
             <ShoppingBag size={18} />
-            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-dourado text-[9px] font-semibold text-carvao-deep">
-              2
-            </span>
+            {count > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-dourado text-[9px] font-semibold text-carvao-deep">
+                {count}
+              </span>
+            )}
           </Link>
           <button
             className="text-marfim lg:hidden"

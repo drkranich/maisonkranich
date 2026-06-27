@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { lexicon } from "@/lib/brand";
 import { PageShell } from "@/components/site/PageShell";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ slug: 
   const supabase = await createClient();
   const { data: p } = await supabase
     .from("products")
-    .select("name, short_desc, description, price_cents, kind, attributes, stock")
+    .select("id, name, short_desc, description, price_cents, kind, attributes, stock")
     .eq("slug", slug)
     .eq("active", true)
     .maybeSingle();
@@ -61,9 +62,15 @@ export default async function ProdutoPage({ params }: { params: Promise<{ slug: 
             )}
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <button className="rounded-md bg-gradient-to-b from-dourado to-bronze px-7 py-3 text-[12px] uppercase tracking-brand text-carvao-deep shadow-glow">
-                {lexicon.addToBox}
-              </button>
+              <AddToCartButton
+                product={{
+                  productId: p.id as string,
+                  slug,
+                  name: p.name as string,
+                  kind: p.kind as string,
+                  price_cents: p.price_cents as number,
+                }}
+              />
               <Link href="/monte-sua-caixa" className="rounded-md border border-dourado/45 px-7 py-3 text-[12px] uppercase tracking-brand text-marfim hover:border-dourado hover:bg-dourado/10">
                 {lexicon.buildStory}
               </Link>
