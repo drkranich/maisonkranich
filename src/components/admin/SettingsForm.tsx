@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Loader2, Save, Check } from "lucide-react";
 import { saveSetting } from "@/lib/admin/settings";
 
-type Brand = { name?: string; tagline?: string; slogan?: string };
-type Contact = { email?: string; whatsapp?: string };
+type Brand = { name?: string; tagline?: string; slogan?: string; favicon_url?: string; logo_url?: string };
+type Contact = { email?: string; whatsapp?: string; instagram?: string };
 type Shipping = { free_above_cents?: number };
 
 export function SettingsForm({
@@ -44,6 +44,8 @@ export function SettingsForm({
             <Field label="Nome" value={b.name ?? ""} onChange={(v) => setB({ ...b, name: v })} />
             <Field label="Tagline" value={b.tagline ?? ""} onChange={(v) => setB({ ...b, tagline: v })} />
             <Field label="Slogan" value={b.slogan ?? ""} onChange={(v) => setB({ ...b, slogan: v })} />
+            <Field label="URL do logotipo" value={b.logo_url ?? ""} onChange={(v) => setB({ ...b, logo_url: v })} help="Imagem do logo (opcional)" />
+            <Field label="URL do favicon (ícone da aba)" value={b.favicon_url ?? ""} onChange={(v) => setB({ ...b, favicon_url: v })} help="Ícone que aparece na aba do navegador. Deixe vazio para o brasão padrão." />
           </div>
         </div>
 
@@ -51,7 +53,8 @@ export function SettingsForm({
           <h3 className="mk-kicker mb-4">Contato & Frete</h3>
           <div className="space-y-3">
             <Field label="E-mail" value={c.email ?? ""} onChange={(v) => setC({ ...c, email: v })} />
-            <Field label="WhatsApp" value={c.whatsapp ?? ""} onChange={(v) => setC({ ...c, whatsapp: v })} />
+            <Field label="WhatsApp" value={c.whatsapp ?? ""} onChange={(v) => setC({ ...c, whatsapp: v })} help="Só números, com DDD e país. Ex.: 5531999999999" />
+            <Field label="Instagram" value={c.instagram ?? ""} onChange={(v) => setC({ ...c, instagram: v })} help="@perfil ou URL" />
             <Field label="Frete grátis acima de (R$)" value={freeAbove} onChange={setFreeAbove} />
           </div>
         </div>
@@ -67,11 +70,12 @@ export function SettingsForm({
   );
 }
 
-function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function Field({ label, value, onChange, help }: { label: string; value: string; onChange: (v: string) => void; help?: string }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-[11px] uppercase tracking-brand text-marfim/55">{label}</span>
       <input value={value} onChange={(e) => onChange(e.target.value)} className="mk-input !pl-3" />
+      {help && <span className="mt-1 block text-[11px] text-marfim/35">{help}</span>}
     </label>
   );
 }

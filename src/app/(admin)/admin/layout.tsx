@@ -19,6 +19,7 @@ export default async function AdminLayout({
   const profile = await requireStaff();
   const name = profile.full_name || profile.email || "Equipe";
   const roleLabel = roleLabels[profile.role as string] ?? "Administrador";
+  const avatar = (profile as { avatar_url?: string | null }).avatar_url ?? null;
 
   return (
     <div className="flex bg-atelier">
@@ -41,16 +42,22 @@ export default async function AdminLayout({
             <Link href="/admin/mensagens" className="relative text-marfim/60 hover:text-dourado">
               <MessageSquare size={18} />
             </Link>
-            <div className="flex items-center gap-3 border-l border-dourado/12 pl-5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-dourado to-bronze text-xs font-semibold text-carvao-deep">
-                {name.charAt(0).toUpperCase()}
-              </div>
-              <div className="leading-tight">
-                <div className="text-sm text-marfim">{name.split(" ")[0]}</div>
-                <div className="text-[10px] uppercase tracking-brand text-dourado/70">
+            <Link href="/admin/config" title="Minha conta e configurações" className="group flex items-center gap-3 border-l border-dourado/12 pl-5">
+              <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-dourado to-bronze text-xs font-semibold text-carvao-deep">
+                {avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatar} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  name.charAt(0).toUpperCase()
+                )}
+              </span>
+              <span className="leading-tight">
+                <span className="block text-sm text-marfim group-hover:text-dourado">{name.split(" ")[0]}</span>
+                <span className="block text-[10px] uppercase tracking-brand text-dourado/70">
                   {roleLabel}
-                </div>
-              </div>
+                </span>
+              </span>
+            </Link>
 
               <Link
                 href="/"

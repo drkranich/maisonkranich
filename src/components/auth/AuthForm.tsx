@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Loader2, Mail, Lock, User } from "lucide-react";
+import { Loader2, Mail, Lock, User, Instagram } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 type Mode = "entrar" | "cadastro" | "recuperar";
@@ -33,6 +33,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const next = params.get("next") || "/conta";
 
   const [fullName, setFullName] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,7 +60,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           email,
           password,
           options: {
-            data: { full_name: fullName },
+            data: { full_name: fullName, instagram: instagram.replace(/^@/, "") },
             emailRedirectTo:
               typeof window !== "undefined"
                 ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
@@ -111,6 +112,17 @@ export function AuthForm({ mode }: { mode: Mode }) {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Seu nome"
+              className="mk-input"
+            />
+          </Field>
+        )}
+
+        {mode === "cadastro" && (
+          <Field icon={Instagram} label="Instagram (opcional)">
+            <input
+              value={instagram}
+              onChange={(e) => setInstagram(e.target.value)}
+              placeholder="@seuperfil"
               className="mk-input"
             />
           </Field>

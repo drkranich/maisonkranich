@@ -37,9 +37,19 @@ export async function getProfile() {
 
   const { data } = await supabase
     .from("profiles")
-    .select("id, full_name, email, avatar_url, role")
+    .select("id, full_name, email, phone, instagram, avatar_url, role")
     .eq("id", user.id)
     .single();
 
-  return data ?? { id: user.id, email: user.email ?? null, full_name: null, avatar_url: null, role: "customer" as const };
+  return (
+    data ?? {
+      id: user.id,
+      email: user.email ?? null,
+      full_name: null,
+      phone: null,
+      instagram: null,
+      avatar_url: null,
+      role: "customer" as const,
+    }
+  );
 }

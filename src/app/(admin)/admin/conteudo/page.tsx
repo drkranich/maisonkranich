@@ -17,13 +17,12 @@ function publicHref(slug: string) {
 
 export default async function AdminConteudo() {
   const supabase = await createClient();
-  const [pages, settings] = await Promise.all([
-    supabase.from("pages").select("id, title, slug, status").order("created_at", { ascending: false }),
-    supabase.from("site_settings").select("key, value"),
-  ]);
+  const { data: pagesData } = await supabase
+    .from("pages")
+    .select("id, title, slug, status")
+    .order("created_at", { ascending: false });
 
-  const rows = pages.data ?? [];
-  const cfg = settings.data ?? [];
+  const rows = pagesData ?? [];
 
   return (
     <>
@@ -47,19 +46,13 @@ export default async function AdminConteudo() {
         />
       </div>
 
-      <h3 className="mk-kicker mb-3">Configurações do site</h3>
-      <div className="mk-card divide-y divide-dourado/8">
-        {cfg.length === 0 ? (
-          <p className="px-5 py-6 text-sm text-marfim/50">Nenhuma configuração definida.</p>
-        ) : (
-          cfg.map((s) => (
-            <div key={s.key as string} className="flex items-start justify-between gap-4 px-5 py-3.5">
-              <code className="text-xs uppercase tracking-wide text-dourado/80">{s.key as string}</code>
-              <code className="max-w-md truncate text-xs text-marfim/55">{JSON.stringify(s.value)}</code>
-            </div>
-          ))
-        )}
-      </div>
+      <Link href="/admin/config" className="mk-card flex items-center justify-between gap-4 p-5 transition-transform hover:-translate-y-0.5">
+        <div>
+          <div className="font-serif text-lg text-marfim">Configurações do site</div>
+          <p className="text-sm text-marfim/55">Identidade, contato, frete, favicon e seu perfil — edite tudo aqui.</p>
+        </div>
+        <span className="text-[11px] uppercase tracking-brand text-dourado/80">Abrir →</span>
+      </Link>
     </>
   );
 }
