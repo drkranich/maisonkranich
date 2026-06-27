@@ -77,7 +77,6 @@ export default async function AdminLayout({
                 </button>
               </form>
             </div>
-          </div>
         </header>
 
         <main className="flex-1 px-8 py-7">{children}</main>
