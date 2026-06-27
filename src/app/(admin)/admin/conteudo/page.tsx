@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function AdminConteudo() {
 
   return (
     <>
-      <AdminPageHeader title="Conteúdo" subtitle="Páginas institucionais e textos do site" action={{ label: "+ Nova página" }} />
+      <AdminPageHeader title="Conteúdo" subtitle="Páginas institucionais e textos do site" action={{ label: "+ Nova página", href: "/admin/conteudo/novo" }} />
 
       <div className="mb-6">
         <DataTable
@@ -27,6 +28,7 @@ export default async function AdminConteudo() {
             { key: "title", label: "Página", render: (r) => <span className="text-marfim">{r.title as string}</span> },
             { key: "slug", label: "Slug", render: (r) => <code className="text-xs text-dourado/70">/{r.slug as string}</code> },
             { key: "status", label: "Status", render: (r) => <Pill tone={tone[r.status as string] ?? "neutral"}>{r.status as string}</Pill> },
+            { key: "acoes", label: "", render: (r) => <RowActions table="pages" id={r.id as string} listPath="/admin/conteudo" editHref={`/admin/conteudo/${r.id}/editar`} /> },
           ]}
         />
       </div>

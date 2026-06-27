@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export default async function AdminCaixas() {
 
   return (
     <>
-      <AdminPageHeader title="Caixas" subtitle={`${rows.length} modelos de caixa`} action={{ label: "+ Nova caixa" }} />
+      <AdminPageHeader title="Caixas" subtitle={`${rows.length} modelos de caixa`} action={{ label: "+ Nova caixa", href: "/admin/caixas/novo" }} />
       <DataTable
         rows={rows}
         empty="Nenhuma caixa cadastrada."
@@ -26,6 +27,7 @@ export default async function AdminCaixas() {
           { key: "price_cents", label: "Preço", render: (r) => brl(r.price_cents as number) },
           { key: "stock", label: "Estoque" },
           { key: "active", label: "Status", render: (r) => (r.active ? <Pill tone="good">Ativa</Pill> : <Pill tone="bad">Inativa</Pill>) },
+          { key: "acoes", label: "", render: (r) => <RowActions table="products" id={r.id as string} listPath="/admin/caixas" editHref={`/admin/caixas/${r.id}/editar`} /> },
         ]}
       />
     </>

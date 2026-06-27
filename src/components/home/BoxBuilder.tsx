@@ -78,14 +78,16 @@ export function BoxBuilder() {
             <button
               key={s.key}
               onClick={() => setStep(i)}
-              className={`flex flex-1 min-w-[64px] flex-col items-center gap-1 rounded-md px-2 py-2 text-[10px] uppercase tracking-wide transition-colors ${
+              className={`flex flex-1 min-w-[64px] flex-col items-center gap-1.5 rounded-md px-2 py-2 text-[10px] uppercase tracking-wide transition-colors ${
                 active
                   ? "bg-dourado/15 text-dourado"
                   : "text-marfim/45 hover:text-marfim/80"
               }`}
             >
-              <Icon size={16} />
-              <span>{s.n}. {s.label}</span>
+              <Icon size={16} className="shrink-0" />
+              <span className="flex h-6 items-start justify-center text-center leading-[1.15]">
+                {s.n}. {s.label}
+              </span>
             </button>
           );
         })}

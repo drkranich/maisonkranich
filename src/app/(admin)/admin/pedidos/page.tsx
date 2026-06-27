@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { brl, dateBR } from "@/lib/format";
 import { AdminPageHeader, DataTable } from "@/components/admin/AdminUI";
@@ -30,6 +31,7 @@ export default async function AdminPedidos() {
           { key: "total_cents", label: "Total", render: (r) => brl(r.total_cents as number) },
           { key: "status", label: "Status", render: (r) => <StatusBadge status={r.status as string} /> },
           { key: "created_at", label: "Data", render: (r) => <span className="text-marfim/50">{dateBR(r.created_at as string)}</span> },
+          { key: "acoes", label: "", render: (r) => <Link href={`/admin/pedidos/${r.id}`} className="text-[11px] uppercase tracking-brand text-dourado/80 hover:text-dourado">Ver →</Link> },
         ]}
       />
     </>

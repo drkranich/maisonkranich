@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { brl, dateBR } from "@/lib/format";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function AdminCupons() {
 
   return (
     <>
-      <AdminPageHeader title="Cupons" subtitle={`${rows.length} cupons`} action={{ label: "+ Novo cupom" }} />
+      <AdminPageHeader title="Cupons" subtitle={`${rows.length} cupons`} action={{ label: "+ Novo cupom", href: "/admin/cupons/novo" }} />
       <DataTable
         rows={rows}
         empty="Nenhum cupom criado."
@@ -31,6 +32,7 @@ export default async function AdminCupons() {
           { key: "used", label: "Usos", render: (r) => `${r.used_count ?? 0}${r.max_uses ? ` / ${r.max_uses}` : ""}` },
           { key: "ends_at", label: "Validade", render: (r) => (r.ends_at ? dateBR(r.ends_at as string) : "Sem prazo") },
           { key: "active", label: "Status", render: (r) => (r.active ? <Pill tone="good">Ativo</Pill> : <Pill tone="bad">Inativo</Pill>) },
+          { key: "acoes", label: "", render: (r) => <RowActions table="coupons" id={r.id as string} listPath="/admin/cupons" editHref={`/admin/cupons/${r.id}/editar`} /> },
         ]}
       />
     </>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, ShoppingBag, Package, Box, Layers, FolderTree,
-  Users, Repeat, CreditCard, BadgePercent, Sparkles, MessagesSquare,
+  Users, Repeat, Crown, CreditCard, BadgePercent, Sparkles, MessagesSquare,
   FolderOpen, Wand2, FileText, Newspaper, BarChart3, Megaphone,
   Settings, ShieldCheck, ScrollText,
 } from "lucide-react";
@@ -22,6 +22,7 @@ const groups: { items: { label: string; href: string; icon: React.ElementType; t
       { label: "Categorias", href: "/admin/categorias", icon: FolderTree },
       { label: "Clientes", href: "/admin/clientes", icon: Users },
       { label: "Assinaturas", href: "/admin/assinaturas", icon: Repeat },
+      { label: "Planos", href: "/admin/planos", icon: Crown },
       { label: "Pagamentos", href: "/admin/pagamentos", icon: CreditCard },
       { label: "Cupons", href: "/admin/cupons", icon: BadgePercent },
       { label: "Curadoria de Presentes", href: "/admin/curadoria", icon: Sparkles, tag: "NOVO" },

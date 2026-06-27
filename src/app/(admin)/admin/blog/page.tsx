@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { dateBR } from "@/lib/format";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function AdminBlog() {
 
   return (
     <>
-      <AdminPageHeader title="Blog" subtitle={`${rows.length} artigos`} action={{ label: "+ Novo artigo" }} />
+      <AdminPageHeader title="Blog" subtitle={`${rows.length} artigos`} action={{ label: "+ Novo artigo", href: "/admin/blog/novo" }} />
       <DataTable
         rows={rows}
         empty="Nenhum artigo escrito ainda."
@@ -27,6 +28,7 @@ export default async function AdminBlog() {
           { key: "slug", label: "Slug", render: (r) => <code className="text-xs text-dourado/70">{r.slug as string}</code> },
           { key: "status", label: "Status", render: (r) => <Pill tone={tone[r.status as string] ?? "neutral"}>{label[r.status as string] ?? (r.status as string)}</Pill> },
           { key: "published_at", label: "Publicação", render: (r) => (r.published_at ? dateBR(r.published_at as string) : "—") },
+          { key: "acoes", label: "", render: (r) => <RowActions table="blog_posts" id={r.id as string} listPath="/admin/blog" editHref={`/admin/blog/${r.id}/editar`} /> },
         ]}
       />
     </>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ export default async function AdminProdutos() {
       <AdminPageHeader
         title="Produtos"
         subtitle={`${rows.length} itens no catálogo`}
-        action={{ label: "+ Novo produto" }}
+        action={{ label: "+ Novo produto", href: "/admin/produtos/novo" }}
       />
       <DataTable
         rows={rows}
@@ -35,6 +36,7 @@ export default async function AdminProdutos() {
           { key: "stock", label: "Estoque", render: (r) => (Number(r.stock) <= 5 ? <span className="text-red-300">{String(r.stock)}</span> : String(r.stock)) },
           { key: "active", label: "Status", render: (r) => (r.active ? <Pill tone="good">Ativo</Pill> : <Pill tone="bad">Inativo</Pill>) },
           { key: "featured", label: "Destaque", render: (r) => (r.featured ? <Pill tone="gold">★</Pill> : "—") },
+          { key: "acoes", label: "", render: (r) => <RowActions table="products" id={r.id as string} listPath="/admin/produtos" editHref={`/admin/produtos/${r.id}/editar`} /> },
         ]}
       />
     </>
