@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutGrid, Package, Repeat, MessagesSquare, FolderOpen,
-  Wallet, BadgePercent, MapPin, Heart, Wand2, Bell, User, LogOut,
+  Wallet, BadgePercent, MapPin, Heart, Wand2, Bell, User, ShieldCheck, LogOut,
 } from "lucide-react";
 
 const items = [
@@ -20,6 +20,7 @@ const items = [
   { label: "Meus Endereços", href: "/conta/enderecos", icon: MapPin },
   { label: "Lista de Desejos", href: "/conta/desejos", icon: Heart },
   { label: "Personalizações", href: "/conta/personalizacoes", icon: Wand2 },
+  { label: "Privacidade & Dados", href: "/conta/privacidade", icon: ShieldCheck },
 ];
 
 export function AccountSidebar() {

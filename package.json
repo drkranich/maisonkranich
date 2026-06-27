@@ -8,6 +8,7 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
+    "test": "node scripts/smoke-test.mjs",
     "typecheck": "tsc --noEmit",
     "types:gen": "supabase gen types typescript --project-id nsbxioehvydkazvvbhgq > src/lib/database.types.ts",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
