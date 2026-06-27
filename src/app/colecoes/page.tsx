@@ -2,12 +2,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { PageShell, PageHero } from "@/components/site/PageShell";
+import { getPage } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Coleções" };
 export const dynamic = "force-dynamic";
 
 export default async function ColecoesPage() {
   const supabase = await createClient();
+  const page = await getPage("colecoes");
   const { data } = await supabase
     .from("collections")
     .select("slug, name, story, theme, cover_url")
@@ -18,8 +20,8 @@ export default async function ColecoesPage() {
     <PageShell>
       <PageHero
         kicker="Curadoria"
-        title="Nossas Coleções"
-        subtitle="Cada coleção é um mundo — uma atmosfera, uma origem, uma memória para guardar."
+        title={page?.title ?? "Nossas Coleções"}
+        subtitle={page?.subtitle ?? "Cada coleção é um mundo — uma atmosfera, uma origem, uma memória para guardar."}
       />
       <div className="mx-auto max-w-[1400px] px-6 py-12">
         <div className="grid gap-6 md:grid-cols-3">

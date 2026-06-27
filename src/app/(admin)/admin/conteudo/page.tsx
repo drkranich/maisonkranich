@@ -9,10 +9,21 @@ export const dynamic = "force-dynamic";
 const tone: Record<string, "good" | "warn" | "neutral"> = { published: "good", draft: "warn", archived: "neutral" };
 
 // onde a página aparece no site público
+const routeMap: Record<string, string> = {
+  home: "/",
+  loja: "/loja",
+  colecoes: "/colecoes",
+  "monte-sua-caixa": "/monte-sua-caixa",
+  curadoria: "/curadoria",
+  assinaturas: "/assinaturas",
+  corporativo: "/corporativo",
+  contato: "/contato",
+  blog: "/blog",
+  sobre: "/sobre",
+  trocas: "/politicas/trocas",
+};
 function publicHref(slug: string) {
-  if (slug === "sobre") return "/sobre";
-  if (slug === "trocas") return "/politicas/trocas";
-  return `/p/${slug}`;
+  return routeMap[slug] ?? `/p/${slug}`;
 }
 
 export default async function AdminConteudo() {

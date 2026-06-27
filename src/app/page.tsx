@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getPage } from "@/lib/site";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/home/Hero";
@@ -35,9 +36,10 @@ const occasions = [
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const [{ data: categories }, { data: collections }] = await Promise.all([
+  const [{ data: categories }, { data: collections }, page] = await Promise.all([
     supabase.from("categories").select("slug,name,description").eq("active", true).order("sort_order").limit(6),
     supabase.from("collections").select("slug,name,story,theme,cover_url").eq("active", true).order("sort_order").limit(3),
+    getPage("home"),
   ]);
 
   return (
@@ -45,7 +47,7 @@ export default async function HomePage() {
       <Header />
 
       {/* HERO + Configurador lado a lado (como a referência) */}
-      <Hero aside={<BoxBuilder />} />
+      <Hero aside={<BoxBuilder />} title={page?.title} promise={page?.subtitle} />
 
       {/* Faixa de diferenciais */}
       <section className="border-y border-dourado/12 bg-musgo/30">

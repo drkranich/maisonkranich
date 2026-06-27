@@ -2,8 +2,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Building2, Gift, Palette, Truck } from "lucide-react";
 import { PageShell, PageHero } from "@/components/site/PageShell";
+import { getPage } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Corporativo" };
+export const dynamic = "force-dynamic";
 
 const perks = [
   { icon: Palette, t: "Marca da sua empresa", d: "Logo, brasão e cores aplicados com acabamento premium." },
@@ -12,13 +14,14 @@ const perks = [
   { icon: Building2, t: "Gestor dedicado", d: "Atendimento concierge para todo o projeto." },
 ];
 
-export default function CorporativoPage() {
+export default async function CorporativoPage() {
+  const page = await getPage("corporativo");
   return (
     <PageShell>
       <PageHero
         kicker="Maison Kranich Empresas"
-        title="Presentes corporativos memoráveis"
-        subtitle="Eleve cada relação da sua empresa com caixas que carregam intenção — e a sua marca."
+        title={page?.title ?? "Presentes corporativos memoráveis"}
+        subtitle={page?.subtitle ?? "Eleve cada relação da sua empresa com caixas que carregam intenção — e a sua marca."}
       />
       <div className="mx-auto max-w-[1100px] px-6 py-14">
         <div className="grid gap-6 sm:grid-cols-2">

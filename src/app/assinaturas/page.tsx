@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { PageShell, PageHero } from "@/components/site/PageShell";
+import { getPage } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Assinaturas" };
 export const dynamic = "force-dynamic";
@@ -14,6 +15,7 @@ const intervalLabel: Record<string, string> = {
 
 export default async function AssinaturasPage() {
   const supabase = await createClient();
+  const page = await getPage("assinaturas");
   const { data: plans } = await supabase
     .from("subscription_plans")
     .select("slug, name, description, interval, price_cents, features, highlight")
@@ -24,8 +26,8 @@ export default async function AssinaturasPage() {
     <PageShell>
       <PageHero
         kicker="Clube Maison Kranich"
-        title="Assinaturas"
-        subtitle="Receba caixas curadas com carinho, no seu ritmo. Cada entrega, uma nova história."
+        title={page?.title ?? "Assinaturas"}
+        subtitle={page?.subtitle ?? "Receba caixas curadas com carinho, no seu ritmo. Cada entrega, uma nova história."}
       />
       <div className="mx-auto max-w-[1400px] px-6 py-12">
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

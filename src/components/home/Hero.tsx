@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { brand, lexicon } from "@/lib/brand";
 
-export function Hero({ aside }: { aside?: React.ReactNode }) {
+export function Hero({ aside, title, promise }: { aside?: React.ReactNode; title?: string | null; promise?: string | null }) {
   return (
     <section className="relative overflow-hidden">
       {/* Fundo cinematográfico — prateleiras, baús, luz âmbar */}
@@ -25,12 +25,18 @@ export function Hero({ aside }: { aside?: React.ReactNode }) {
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
           <span className="mk-kicker">{brand.tagline}</span>
-          <h1 className="mt-5 font-serif text-5xl leading-[1.05] text-marfim md:text-6xl xl:text-7xl">
-            Onde <em className="text-dourado not-italic">cada história</em>
-            <br /> encontra seu <span className="italic">abrigo.</span>
-          </h1>
+          {title ? (
+            <h1 className="mt-5 font-serif text-5xl leading-[1.05] text-marfim md:text-6xl xl:text-7xl">
+              {title}
+            </h1>
+          ) : (
+            <h1 className="mt-5 font-serif text-5xl leading-[1.05] text-marfim md:text-6xl xl:text-7xl">
+              Onde <em className="text-dourado not-italic">cada história</em>
+              <br /> encontra seu <span className="italic">abrigo.</span>
+            </h1>
+          )}
           <p className="mt-6 max-w-md text-base leading-relaxed text-marfim/70">
-            {brand.promise}
+            {promise || brand.promise}
           </p>
           <div className="mt-9 flex flex-wrap gap-4">
             <Button href="/loja">Conheça a Loja</Button>

@@ -4,6 +4,7 @@ import { Box } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { PageShell, PageHero } from "@/components/site/PageShell";
+import { getPage } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Loja" };
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ export default async function LojaPage({
 }) {
   const { categoria } = await searchParams;
   const supabase = await createClient();
+  const page = await getPage("loja");
 
   const [{ data: categories }, productsRes] = await Promise.all([
     supabase.from("categories").select("slug,name").eq("active", true).order("sort_order"),
@@ -39,8 +41,8 @@ export default async function LojaPage({
     <PageShell>
       <PageHero
         kicker="Empório das Caixas"
-        title="A Loja"
-        subtitle="Cada peça escolhida para compor histórias que merecem ser guardadas."
+        title={page?.title ?? "A Loja"}
+        subtitle={page?.subtitle ?? "Cada peça escolhida para compor histórias que merecem ser guardadas."}
       />
 
       <div className="mx-auto max-w-[1400px] px-6 py-12">

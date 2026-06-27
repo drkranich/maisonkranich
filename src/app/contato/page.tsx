@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Mail, MessageCircle, Clock } from "lucide-react";
-import { getSiteSettings } from "@/lib/site";
+import { getSiteSettings, getPage } from "@/lib/site";
 import { PageShell, PageHero } from "@/components/site/PageShell";
 
 export const metadata: Metadata = { title: "Contato" };
@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ContatoPage() {
   const { contact } = await getSiteSettings();
+  const page = await getPage("contato");
   const email = contact.email || "contato@maisonkranich.com";
   const whatsapp = contact.whatsapp;
 
@@ -15,8 +16,8 @@ export default async function ContatoPage() {
     <PageShell>
       <PageHero
         kicker="Estamos por perto"
-        title="Fale com a Maison"
-        subtitle="Adoraríamos ajudar a criar o presente perfeito. Conte com a gente."
+        title={page?.title ?? "Fale com a Maison"}
+        subtitle={page?.subtitle ?? "Adoraríamos ajudar a criar o presente perfeito. Conte com a gente."}
       />
       <div className="mx-auto grid max-w-[900px] gap-6 px-6 py-14 sm:grid-cols-3">
         <a href={`mailto:${email}`} className="mk-card flex flex-col items-center gap-3 p-7 text-center transition-transform hover:-translate-y-1">
