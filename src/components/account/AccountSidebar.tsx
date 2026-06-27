@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutGrid, Package, Repeat, MessagesSquare, FolderOpen,
-  Wallet, BadgePercent, MapPin, Heart, Wand2, LogOut,
+  Wallet, BadgePercent, MapPin, Heart, Wand2, Bell, LogOut,
 } from "lucide-react";
 
 const items = [
   { label: "Visão Geral", href: "/conta", icon: LayoutGrid },
+  { label: "Notificações", href: "/conta/notificacoes", icon: Bell },
   { label: "Meus Pedidos", href: "/conta/pedidos", icon: Package },
   { label: "Minhas Assinaturas", href: "/conta/assinaturas", icon: Repeat },
   { label: "Minhas Conversas", href: "/conta/conversas", icon: MessagesSquare },

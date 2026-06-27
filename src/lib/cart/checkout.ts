@@ -1,15 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
+import { stripeConfigured, createCheckoutSession } from "@/lib/stripe";
+import { brl } from "@/lib/format";
 
 type Input = {
   items: { productId: string; quantity: number }[];
   shipping: Record<string, unknown>;
 };
 
-type Out = { ok?: true; number?: number; error?: string };
+type Out = { ok?: true; number?: number; paymentUrl?: string; error?: string };
 
 const FREE_SHIPPING_ABOVE = 29900; // R$ 299
 
@@ -80,6 +83,53 @@ export async function createOrder(input: Input): Promise<Out> {
 
   if (itErr) return { error: itErr.message };
 
+  const number = (order as { number: number }).number;
+  const orderId = (order as { id: string }).id;
   revalidatePath("/conta/pedidos");
-  return { ok: true, number: (order as { number: number }).number };
+
+  // Notificações: cliente + equipe
+  try {
+    await supabase.from("notifications").insert({
+      user_id: user.id,
+      type: "order",
+      title: `Pedido #${number} recebido`,
+      body: "Estamos cuidando de cada detalhe da sua história.",
+      link: "/conta/pedidos",
+    } as never);
+    await supabase.rpc("notify_owners" as never, {
+      p_type: "order",
+      p_title: `Novo pedido #${number}`,
+      p_body: `Recebido de ${user.email ?? "cliente"} · ${brl(total_cents)}`,
+      p_link: "/admin/pedidos",
+    } as never);
+  } catch {
+    /* notificação é best-effort */
+  }
+
+  // Pagamento via Stripe (se configurado) → devolve URL de checkout hospedado
+  if (stripeConfigured()) {
+    try {
+      const h = await headers();
+      const host = h.get("x-forwarded-host") ?? h.get("host") ?? "";
+      const proto = h.get("x-forwarded-proto") ?? "https";
+      const origin = `${proto}://${host}`;
+      const paymentUrl = await createCheckoutSession({
+        orderId,
+        orderNumber: number,
+        origin,
+        customerEmail: user.email ?? undefined,
+        items: lineItems.map((li) => ({
+          name: String(li.name),
+          unit_amount: Number(li.unit_price_cents),
+          quantity: Number(li.quantity),
+        })),
+      });
+      return { ok: true, number, paymentUrl };
+    } catch {
+      // Falha ao criar sessão → pedido criado; segue para confirmação (pendente)
+      return { ok: true, number };
+    }
+  }
+
+  return { ok: true, number };
 }

@@ -1,39 +1,28 @@
 import { createClient } from "@/lib/supabase/server";
-import { dateBR } from "@/lib/format";
-import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
+import { AdminPageHeader } from "@/components/admin/AdminUI";
+import { PermissionsManager } from "@/components/admin/PermissionsManager";
 
 export const dynamic = "force-dynamic";
-
-const roleLabel: Record<string, string> = {
-  owner: "Superadmin", admin: "Administrador", curator: "Curador(a)", support: "Atendimento",
-};
-const roleTone: Record<string, "gold" | "good" | "warn"> = {
-  owner: "gold", admin: "good", curator: "warn", support: "warn",
-};
 
 export default async function AdminPermissoes() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("id, full_name, email, role, created_at")
+    .select("id, full_name, email, role")
     .in("role", ["owner", "admin", "curator", "support"])
     .order("created_at");
 
-  const rows = data ?? [];
+  const members = (data ?? []).map((m) => ({
+    id: m.id as string,
+    full_name: (m.full_name as string) ?? null,
+    email: (m.email as string) ?? null,
+    role: m.role as string,
+  }));
 
   return (
     <>
-      <AdminPageHeader title="Permissões" subtitle="Equipe e papéis de acesso (RBAC)" action={{ label: "+ Convidar membro" }} />
-      <DataTable
-        rows={rows}
-        empty="Apenas o superadministrador tem acesso por enquanto."
-        columns={[
-          { key: "full_name", label: "Membro", render: (r) => <span className="text-marfim">{(r.full_name as string) || (r.email as string)}</span> },
-          { key: "email", label: "E-mail", render: (r) => <span className="text-marfim/60">{r.email as string}</span> },
-          { key: "role", label: "Papel", render: (r) => <Pill tone={roleTone[r.role as string] ?? "good"}>{roleLabel[r.role as string] ?? (r.role as string)}</Pill> },
-          { key: "created_at", label: "Desde", render: (r) => dateBR(r.created_at as string) },
-        ]}
-      />
+      <AdminPageHeader title="Permissões" subtitle="Equipe e papéis de acesso (RBAC)" />
+      <PermissionsManager initial={members} />
     </>
   );
 }

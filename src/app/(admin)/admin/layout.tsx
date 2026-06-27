@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { Sidebar } from "@/components/admin/Sidebar";
-import { Bell, MessageSquare, Search } from "lucide-react";
+import { MessageSquare, Search } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const roleLabels: Record<string, string> = {
   owner: "Superadministrador",
@@ -35,18 +37,10 @@ export default async function AdminLayout({
           </div>
           <div className="flex items-center gap-5">
             <Search className="text-marfim/50" size={18} />
-            <button className="relative text-marfim/60 hover:text-dourado">
-              <Bell size={18} />
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-dourado text-[9px] text-carvao-deep">
-                12
-              </span>
-            </button>
-            <button className="relative text-marfim/60 hover:text-dourado">
+            <NotificationBell allHref="/admin/pedidos" />
+            <Link href="/admin/mensagens" className="relative text-marfim/60 hover:text-dourado">
               <MessageSquare size={18} />
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-dourado text-[9px] text-carvao-deep">
-                5
-              </span>
-            </button>
+            </Link>
             <div className="flex items-center gap-3 border-l border-dourado/12 pl-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-dourado to-bronze text-xs font-semibold text-carvao-deep">
                 {name.charAt(0).toUpperCase()}

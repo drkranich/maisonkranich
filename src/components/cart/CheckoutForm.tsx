@@ -44,6 +44,10 @@ export function CheckoutForm({ defaultAddress }: { defaultAddress: Address | nul
       return;
     }
     clear();
+    if (res.paymentUrl) {
+      window.location.href = res.paymentUrl; // Checkout hospedado do Stripe
+      return;
+    }
     router.push(`/checkout/obrigado?numero=${res.number}`);
   }
 

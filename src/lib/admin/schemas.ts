@@ -171,6 +171,20 @@ export const entities: Record<string, Entity> = {
       { key: "seo", label: "SEO (JSON)", type: "json", help: 'ex.: {"description":"..."}' },
     ],
   },
+  regras: {
+    table: "curation_rules",
+    singular: "Regra",
+    list: "/admin/curadoria",
+    defaults: { active: true, seasonal: false, priority: 0, conditions: {}, actions: {} },
+    fields: [
+      { key: "name", label: "Nome da regra", type: "text", required: true },
+      { key: "priority", label: "Prioridade", type: "number", half: true },
+      { key: "seasonal", label: "Sazonal", type: "bool", half: true },
+      { key: "conditions", label: "Condições (JSON)", type: "json", help: 'ex.: {"ocasiao":"natal","estilo":"sofisticado"}' },
+      { key: "actions", label: "Ações (JSON)", type: "json", help: 'ex.: {"priorizar_colecao":"europeia","priorizar_produtos":["vinho-reserva"]}' },
+      { key: "active", label: "Ativa", type: "bool", half: true },
+    ],
+  },
 };
 
 export function getEntity(name: string): Entity | null {

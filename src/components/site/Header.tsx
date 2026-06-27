@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Heart, ShoppingBag, User, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { useCart } from "@/lib/cart/CartContext";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const nav = [
   { label: "Home", href: "/" },
@@ -46,6 +47,7 @@ export function Header() {
           >
             <User size={16} /> Minha Conta
           </Link>
+          <NotificationBell />
           <Link href="/conta/desejos" className="text-marfim/75 hover:text-dourado">
             <Heart size={18} />
           </Link>
