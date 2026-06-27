@@ -18,7 +18,7 @@ export function Hero({ aside }: { aside?: React.ReactNode }) {
       <div className="absolute inset-0 bg-gradient-to-r from-carvao-deep via-carvao-deep/90 to-carvao-deep/60" />
       <div className="absolute inset-0 bg-candle opacity-50" />
 
-      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-6 py-16 lg:grid-cols-[1fr_440px] lg:gap-12 lg:py-24">
+      <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-6 py-16 lg:grid-cols-[1fr_480px] lg:gap-12 lg:py-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}

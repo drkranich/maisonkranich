@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Sidebar } from "@/components/admin/Sidebar";
-import { MessageSquare, Search } from "lucide-react";
+import { MessageSquare, Search, Store, LogOut } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 
@@ -51,6 +51,24 @@ export default async function AdminLayout({
                   {roleLabel}
                 </div>
               </div>
+
+              <Link
+                href="/"
+                title="Ir para a loja"
+                className="ml-1 flex items-center gap-1.5 rounded-md border border-dourado/25 px-3 py-1.5 text-[10px] uppercase tracking-brand text-marfim/70 transition hover:border-dourado hover:text-dourado"
+              >
+                <Store size={14} /> Ver loja
+              </Link>
+
+              <form action="/auth/sair" method="post">
+                <button
+                  type="submit"
+                  title="Sair da conta"
+                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] uppercase tracking-brand text-marfim/55 transition hover:bg-red-500/10 hover:text-red-300"
+                >
+                  <LogOut size={14} /> Sair
+                </button>
+              </form>
             </div>
           </div>
         </header>

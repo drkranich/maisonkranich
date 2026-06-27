@@ -87,7 +87,7 @@ export function BoxBuilder() {
       </div>
 
       {/* Passos (provador) */}
-      <div className="flex flex-wrap gap-1 border-b border-dourado/12 bg-carvao-deep/60 px-3 py-3">
+      <div className="grid grid-cols-7 gap-1 border-b border-dourado/12 bg-carvao-deep/60 px-2 py-3">
         {builderSteps.map((s, i) => {
           const Icon = stepIcons[s.key];
           const active = i === step;
@@ -95,15 +95,16 @@ export function BoxBuilder() {
             <button
               key={s.key}
               onClick={() => setStep(i)}
-              className={`flex flex-1 min-w-[64px] flex-col items-center gap-1.5 rounded-md px-2 py-2 text-[10px] uppercase tracking-wide transition-colors ${
+              className={`flex flex-col items-center gap-1.5 rounded-md px-1 py-2 uppercase tracking-wide transition-colors ${
                 active
                   ? "bg-dourado/15 text-dourado"
                   : "text-marfim/45 hover:text-marfim/80"
               }`}
             >
               <Icon size={16} className="shrink-0" />
-              <span className="flex h-6 items-start justify-center text-center leading-[1.15]">
-                {s.n}. {s.label}
+              <span className="flex flex-col items-center leading-tight">
+                <span className="text-[10px]">{s.n}.</span>
+                <span className="whitespace-nowrap text-[8.5px]">{s.label}</span>
               </span>
             </button>
           );
