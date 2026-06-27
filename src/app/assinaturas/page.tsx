@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { brl } from "@/lib/format";
 import { PageShell, PageHero } from "@/components/site/PageShell";
 import { getPage } from "@/lib/site";
+import { SubscribeButton } from "@/components/subscriptions/SubscribeButton";
 
 export const metadata: Metadata = { title: "Assinaturas" };
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export default async function AssinaturasPage() {
   const page = await getPage("assinaturas");
   const { data: plans } = await supabase
     .from("subscription_plans")
-    .select("slug, name, description, interval, price_cents, features, highlight")
+    .select("id, slug, name, description, interval, price_cents, features, highlight, stripe_price_id")
     .eq("active", true)
     .order("sort_order");
 
@@ -53,18 +54,13 @@ export default async function AssinaturasPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href={`/cadastro?next=/conta/assinaturas`}
-                  className="mt-6 rounded-md bg-gradient-to-b from-dourado to-bronze py-3 text-center text-[11px] uppercase tracking-brand text-carvao-deep"
-                >
-                  Assinar
-                </Link>
+                <SubscribeButton planId={p.id as string} />
               </div>
             );
           })}
         </div>
         <p className="mt-6 text-center text-xs text-marfim/40">
-          Cobrança recorrente segura via Stripe (em integração). Cancele quando quiser pelo Meu Baú.
+          Cobrança recorrente segura via Stripe. Cancele quando quiser pelo Meu Baú.
         </p>
       </div>
     </PageShell>

@@ -25,12 +25,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "payload inválido" }, { status: 400 });
   }
 
+  // Stripe → enum local de status de assinatura
+  const mapSubStatus = (s: string): string => {
+    switch (s) {
+      case "active": return "active";
+      case "trialing": return "trialing";
+      case "past_due":
+      case "unpaid":
+      case "incomplete": return "past_due";
+      case "paused": return "paused";
+      case "canceled":
+      case "incomplete_expired": return "cancelled";
+      default: return "active";
+    }
+  };
+
   if (event.type === "checkout.session.completed") {
     const session = (event.data?.object ?? {}) as Record<string, unknown>;
-    const orderId = (session.metadata as Record<string, string> | undefined)?.order_id;
-    const paymentStatus = String(session.payment_status ?? "paid");
+    const meta = (session.metadata as Record<string, string> | undefined) ?? {};
+    const orderId = meta.order_id;
+    const isSubscription = String(session.mode ?? "") === "subscription" || !!meta.plan_id;
 
-    if (orderId) {
+    // --- PEDIDO (pagamento único) ---
+    if (orderId && !isSubscription) {
+      const paymentStatus = String(session.payment_status ?? "paid");
       const db = createServiceClient();
       if (db) {
         const { data: updated } = await db
@@ -61,6 +79,57 @@ export async function POST(request: Request) {
           } as never);
         }
       }
+    }
+
+    // --- ASSINATURA ---
+    if (isSubscription && meta.user_id) {
+      const db = createServiceClient();
+      if (db) {
+        const subId = String(session.subscription ?? "");
+        const { data: existing } = await db
+          .from("subscriptions")
+          .select("id")
+          .eq("stripe_subscription_id", subId)
+          .maybeSingle();
+
+        if (!existing) {
+          await db.from("subscriptions").insert({
+            user_id: meta.user_id,
+            plan_id: meta.plan_id ?? null,
+            status: "active",
+            stripe_subscription_id: subId,
+            started_at: new Date().toISOString(),
+          } as never);
+        }
+        await db.from("notifications").insert({
+          user_id: meta.user_id,
+          type: "subscription",
+          title: "Assinatura ativada",
+          body: "Bem-vindo(a) ao Clube Maison Kranich! Sua curadoria começa agora.",
+          link: "/conta/assinaturas",
+        } as never);
+      }
+    }
+  }
+
+  // --- Atualização / cancelamento de assinatura ---
+  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+    const sub = (event.data?.object ?? {}) as Record<string, unknown>;
+    const subId = String(sub.id ?? "");
+    const status = event.type === "customer.subscription.deleted" ? "cancelled" : mapSubStatus(String(sub.status ?? ""));
+    const db = createServiceClient();
+    if (db && subId) {
+      await db
+        .from("subscriptions")
+        .update({
+          status,
+          cancel_at_period_end: Boolean(sub.cancel_at_period_end),
+          current_period_end: sub.current_period_end
+            ? new Date(Number(sub.current_period_end) * 1000).toISOString()
+            : null,
+          updated_at: new Date().toISOString(),
+        } as never)
+        .eq("stripe_subscription_id", subId);
     }
   }
 

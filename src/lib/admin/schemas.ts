@@ -138,6 +138,7 @@ export const entities: Record<string, Entity> = {
         { value: "annual", label: "Anual" },
       ] },
       { key: "price_cents", label: "Preço (R$)", type: "money", required: true, half: true },
+      { key: "stripe_price_id", label: "Stripe Price ID", type: "text", half: true, help: "ex.: price_123… — conecta este plano ao preço recorrente na Stripe." },
       { key: "description", label: "Descrição", type: "textarea" },
       { key: "features", label: "Benefícios (um por linha)", type: "array" },
       { key: "sort_order", label: "Ordem", type: "number", half: true },
