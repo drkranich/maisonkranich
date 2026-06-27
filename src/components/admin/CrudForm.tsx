@@ -6,6 +6,7 @@ import { Loader2, Save, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { Field } from "@/lib/admin/schemas";
 import { saveRecord } from "@/lib/admin/crud";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Props = {
   fields: Field[];
@@ -29,17 +30,20 @@ function toInputValue(field: Field, v: unknown): string {
 
 export function CrudForm({ fields, initial, table, listPath, id, title, dynamicOptions }: Props) {
   const router = useRouter();
-  const [state, setState] = useState<Record<string, string | boolean>>(() => {
-    const s: Record<string, string | boolean> = {};
+  const [state, setState] = useState<Record<string, string | boolean | string[]>>(() => {
+    const s: Record<string, string | boolean | string[]> = {};
     for (const f of fields) {
-      s[f.key] = f.type === "bool" ? Boolean(initial[f.key]) : toInputValue(f, initial[f.key]);
+      if (f.type === "bool") s[f.key] = Boolean(initial[f.key]);
+      else if (f.type === "gallery") s[f.key] = Array.isArray(initial[f.key]) ? (initial[f.key] as string[]) : [];
+      else if (f.type === "image") s[f.key] = initial[f.key] ? String(initial[f.key]) : "";
+      else s[f.key] = toInputValue(f, initial[f.key]);
     }
     return s;
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function set(key: string, v: string | boolean) {
+  function set(key: string, v: string | boolean | string[]) {
     setState((s) => ({ ...s, [key]: v }));
   }
 
@@ -56,6 +60,8 @@ export function CrudForm({ fields, initial, table, listPath, id, title, dynamicO
           case "json": out[f.key] = raw === "" ? {} : JSON.parse(String(raw)); break;
           case "date":
           case "datetime": out[f.key] = raw === "" ? null : new Date(String(raw)).toISOString(); break;
+          case "image": out[f.key] = raw ? String(raw) : null; break;
+          case "gallery": out[f.key] = Array.isArray(raw) ? raw : []; break;
           default: out[f.key] = raw === "" ? null : String(raw);
         }
       } catch {
@@ -105,12 +111,16 @@ export function CrudForm({ fields, initial, table, listPath, id, title, dynamicO
           const opts = f.optionsFrom ? dynamicOptions?.[f.optionsFrom] ?? [] : f.options ?? [];
           const full = !f.half;
           return (
-            <label key={f.key} className={`block ${full ? "sm:col-span-2" : ""}`}>
+            <div key={f.key} className={`block ${full ? "sm:col-span-2" : ""}`}>
               <span className="mb-1.5 flex items-center gap-2 text-[11px] uppercase tracking-brand text-marfim/55">
                 {f.label}{f.required && <span className="text-dourado">*</span>}
               </span>
 
-              {f.type === "bool" ? (
+              {f.type === "image" ? (
+                <ImageUpload value={(state[f.key] as string) || null} onChange={(v) => set(f.key, v ?? "")} folder="catalog" />
+              ) : f.type === "gallery" ? (
+                <ImageUpload multiple value={(state[f.key] as string[]) ?? []} onChange={(v) => set(f.key, v)} folder="catalog" />
+              ) : f.type === "bool" ? (
                 <button
                   type="button"
                   onClick={() => set(f.key, !state[f.key])}
@@ -143,7 +153,7 @@ export function CrudForm({ fields, initial, table, listPath, id, title, dynamicO
               )}
 
               {f.help && <span className="mt-1 block text-[11px] text-marfim/35">{f.help}</span>}
-            </label>
+            </div>
           );
         })}
       </div>

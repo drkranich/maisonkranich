@@ -1,6 +1,7 @@
 export type FieldType =
   | "text" | "textarea" | "slug" | "number" | "money"
-  | "bool" | "select" | "array" | "json" | "date" | "datetime";
+  | "bool" | "select" | "array" | "json" | "date" | "datetime"
+  | "image" | "gallery";
 
 export type Field = {
   key: string;
@@ -47,6 +48,7 @@ const productFields = (includeKind: boolean): Field[] => [
   { key: "category_id", label: "Categoria", type: "select", optionsFrom: "categories", half: true },
   { key: "short_desc", label: "Descrição curta", type: "text" },
   { key: "description", label: "Descrição completa", type: "textarea" },
+  { key: "images", label: "Imagens", type: "gallery", help: "A primeira imagem é a principal (capa)." },
   { key: "attributes", label: "Atributos (JSON)", type: "json", help: 'ex.: {"material":"kraft","cor":"natural"}' },
   { key: "active", label: "Ativo", type: "bool", half: true },
   { key: "featured", label: "Destaque", type: "bool", half: true },
@@ -79,7 +81,7 @@ export const entities: Record<string, Entity> = {
       { key: "sort_order", label: "Ordem", type: "number", half: true },
       { key: "story", label: "Narrativa afetiva", type: "textarea" },
       { key: "description", label: "Descrição", type: "textarea" },
-      { key: "cover_url", label: "URL da capa", type: "text" },
+      { key: "cover_url", label: "Capa da coleção", type: "image" },
       { key: "featured", label: "Destaque", type: "bool", half: true },
       { key: "active", label: "Ativa", type: "bool", half: true },
     ],
@@ -93,7 +95,7 @@ export const entities: Record<string, Entity> = {
       { key: "name", label: "Nome", type: "text", required: true, half: true },
       { key: "slug", label: "Slug", type: "slug", required: true, half: true },
       { key: "description", label: "Descrição", type: "textarea" },
-      { key: "image_url", label: "URL da imagem", type: "text" },
+      { key: "image_url", label: "Imagem", type: "image" },
       { key: "sort_order", label: "Ordem", type: "number", half: true },
       { key: "active", label: "Ativa", type: "bool", half: true },
     ],

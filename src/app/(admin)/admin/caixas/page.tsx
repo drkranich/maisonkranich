@@ -9,7 +9,7 @@ export default async function AdminCaixas() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("id, name, price_cents, stock, active, attributes")
+    .select("id, name, price_cents, stock, active, attributes, images")
     .eq("kind", "box")
     .order("created_at", { ascending: false });
 
@@ -22,6 +22,13 @@ export default async function AdminCaixas() {
         rows={rows}
         empty="Nenhuma caixa cadastrada."
         columns={[
+          { key: "thumb", label: "", render: (r) => {
+            const imgs = r.images as string[] | null;
+            return imgs && imgs[0]
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={imgs[0]} alt="" className="h-10 w-10 rounded-md object-cover" />
+              : <span className="flex h-10 w-10 items-center justify-center rounded-md bg-nogueira/40 text-dourado/40">—</span>;
+          } },
           { key: "name", label: "Modelo", render: (r) => <span className="text-marfim">{r.name as string}</span> },
           { key: "material", label: "Material", render: (r) => String((r.attributes as Record<string, unknown>)?.material ?? "—") },
           { key: "price_cents", label: "Preço", render: (r) => brl(r.price_cents as number) },

@@ -21,7 +21,7 @@ export default async function LojaPage({
     (async () => {
       let q = supabase
         .from("products")
-        .select("slug,name,short_desc,price_cents,kind,category_id,categories(slug)")
+        .select("slug,name,short_desc,price_cents,kind,category_id,images,categories(slug)")
         .eq("active", true)
         .order("featured", { ascending: false });
       return q;
@@ -73,8 +73,13 @@ export default async function LojaPage({
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((p) => (
               <Link key={p.slug} href={`/loja/${p.slug}`} className="mk-card group overflow-hidden transition-transform hover:-translate-y-1">
-                <div className="flex h-44 items-center justify-center bg-gradient-to-br from-nogueira to-carvao-deep">
-                  <Box className="text-dourado/60 transition-transform group-hover:scale-110" size={40} />
+                <div className="flex h-44 items-center justify-center overflow-hidden bg-gradient-to-br from-nogueira to-carvao-deep">
+                  {Array.isArray(p.images) && p.images[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={String(p.images[0])} alt={p.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                  ) : (
+                    <Box className="text-dourado/60 transition-transform group-hover:scale-110" size={40} />
+                  )}
                 </div>
                 <div className="p-5">
                   <div className="font-serif text-lg text-marfim group-hover:text-dourado">{p.name}</div>

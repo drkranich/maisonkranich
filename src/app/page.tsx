@@ -37,7 +37,7 @@ export default async function HomePage() {
   const supabase = await createClient();
   const [{ data: categories }, { data: collections }] = await Promise.all([
     supabase.from("categories").select("slug,name,description").eq("active", true).order("sort_order").limit(6),
-    supabase.from("collections").select("slug,name,story,theme").eq("active", true).order("sort_order").limit(3),
+    supabase.from("collections").select("slug,name,story,theme,cover_url").eq("active", true).order("sort_order").limit(3),
   ]);
 
   return (
@@ -128,18 +128,26 @@ export default async function HomePage() {
               <Link
                 key={c.slug}
                 href={`/colecoes/${c.slug}`}
-                className="mk-card group p-8 transition-transform hover:-translate-y-1"
+                className="mk-card group overflow-hidden transition-transform hover:-translate-y-1"
               >
-                <span className="mk-kicker">Coleção</span>
-                <h4 className="mt-2 font-serif text-2xl text-marfim group-hover:text-dourado">
-                  {c.name}
-                </h4>
-                <p className="mt-3 text-sm leading-relaxed text-marfim/60">
-                  {c.story}
-                </p>
-                <span className="mt-5 inline-block text-[11px] uppercase tracking-brand text-dourado/80">
-                  Explorar →
-                </span>
+                {c.cover_url && (
+                  <div className="h-40 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={c.cover_url} alt={c.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                  </div>
+                )}
+                <div className="p-8">
+                  <span className="mk-kicker">Coleção</span>
+                  <h4 className="mt-2 font-serif text-2xl text-marfim group-hover:text-dourado">
+                    {c.name}
+                  </h4>
+                  <p className="mt-3 text-sm leading-relaxed text-marfim/60">
+                    {c.story}
+                  </p>
+                  <span className="mt-5 inline-block text-[11px] uppercase tracking-brand text-dourado/80">
+                    Explorar →
+                  </span>
+                </div>
               </Link>
             ))}
           </div>

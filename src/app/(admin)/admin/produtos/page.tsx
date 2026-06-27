@@ -14,7 +14,7 @@ export default async function AdminProdutos() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("id, name, kind, price_cents, stock, active, featured")
+    .select("id, name, kind, price_cents, stock, active, featured, images")
     .order("created_at", { ascending: false });
 
   const rows = data ?? [];
@@ -30,6 +30,13 @@ export default async function AdminProdutos() {
         rows={rows}
         empty="Nenhum produto cadastrado ainda."
         columns={[
+          { key: "thumb", label: "", render: (r) => {
+            const imgs = r.images as string[] | null;
+            return imgs && imgs[0]
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={imgs[0]} alt="" className="h-10 w-10 rounded-md object-cover" />
+              : <span className="flex h-10 w-10 items-center justify-center rounded-md bg-nogueira/40 text-dourado/40">—</span>;
+          } },
           { key: "name", label: "Nome", render: (r) => <span className="text-marfim">{r.name as string}</span> },
           { key: "kind", label: "Tipo", render: (r) => <Pill tone="gold">{kindLabels[r.kind as string] ?? (r.kind as string)}</Pill> },
           { key: "price_cents", label: "Preço", render: (r) => brl(r.price_cents as number) },

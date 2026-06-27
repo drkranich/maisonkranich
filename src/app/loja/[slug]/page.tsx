@@ -6,6 +6,7 @@ import { brl } from "@/lib/format";
 import { lexicon } from "@/lib/brand";
 import { PageShell } from "@/components/site/PageShell";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { ProductGallery } from "@/components/site/ProductGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ slug: 
   const supabase = await createClient();
   const { data: p } = await supabase
     .from("products")
-    .select("id, name, short_desc, description, price_cents, kind, attributes, stock")
+    .select("id, name, short_desc, description, price_cents, kind, attributes, stock, images")
     .eq("slug", slug)
     .eq("active", true)
     .maybeSingle();
@@ -36,9 +37,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ slug: 
         </Link>
 
         <div className="grid gap-10 md:grid-cols-2">
-          <div className="mk-card flex h-[380px] items-center justify-center bg-gradient-to-br from-nogueira to-carvao-deep">
-            <Box className="text-dourado/60" size={72} />
-          </div>
+          <ProductGallery images={(p.images as string[]) ?? []} alt={p.name as string} />
 
           <div>
             <span className="mk-kicker">{kindLabels[p.kind as string] ?? "Produto"}</span>
