@@ -10,7 +10,7 @@ export default async function EnderecosPage() {
   const user = await getUser();
   const { data } = await supabase
     .from("addresses")
-    .select("id, label, recipient, line1, line2, district, city, state, zip, is_default")
+    .select("id, label, recipient, line1, line2, district, city, state, zip, country, is_default")
     .eq("user_id", user!.id)
     .order("is_default", { ascending: false });
 

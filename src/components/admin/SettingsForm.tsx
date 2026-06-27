@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Save, Check } from "lucide-react";
 import { saveSetting } from "@/lib/admin/settings";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Brand = { name?: string; tagline?: string; slogan?: string; favicon_url?: string; logo_url?: string };
 type Contact = { email?: string; whatsapp?: string; instagram?: string };
@@ -44,8 +45,18 @@ export function SettingsForm({
             <Field label="Nome" value={b.name ?? ""} onChange={(v) => setB({ ...b, name: v })} />
             <Field label="Tagline" value={b.tagline ?? ""} onChange={(v) => setB({ ...b, tagline: v })} />
             <Field label="Slogan" value={b.slogan ?? ""} onChange={(v) => setB({ ...b, slogan: v })} />
-            <Field label="URL do logotipo" value={b.logo_url ?? ""} onChange={(v) => setB({ ...b, logo_url: v })} help="Imagem do logo (opcional)" />
-            <Field label="URL do favicon (ícone da aba)" value={b.favicon_url ?? ""} onChange={(v) => setB({ ...b, favicon_url: v })} help="Ícone que aparece na aba do navegador. Deixe vazio para o brasão padrão." />
+
+            <div>
+              <span className="mb-1.5 block text-[11px] uppercase tracking-brand text-marfim/55">Logotipo</span>
+              <ImageUpload value={b.logo_url ?? null} onChange={(v) => setB({ ...b, logo_url: v ?? "" })} folder="brand" />
+              <span className="mt-1 block text-[11px] text-marfim/35">Imagem do logo (opcional).</span>
+            </div>
+
+            <div>
+              <span className="mb-1.5 block text-[11px] uppercase tracking-brand text-marfim/55">Favicon (ícone da aba)</span>
+              <ImageUpload value={b.favicon_url ?? null} onChange={(v) => setB({ ...b, favicon_url: v ?? "" })} folder="brand" />
+              <span className="mt-1 block text-[11px] text-marfim/35">Ícone que aparece na aba do navegador. Ideal: PNG/SVG quadrado. Vazio = brasão padrão.</span>
+            </div>
           </div>
         </div>
 
