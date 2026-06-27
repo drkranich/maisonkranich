@@ -165,9 +165,10 @@ export const entities: Record<string, Entity> = {
     defaults: { status: "draft", content: [], seo: {} },
     fields: [
       { key: "title", label: "Título", type: "text", required: true, half: true },
-      { key: "slug", label: "Slug", type: "slug", required: true, half: true },
+      { key: "slug", label: "Slug", type: "slug", required: true, half: true, help: "aparece em /p/slug (ou /sobre, /trocas)" },
+      { key: "subtitle", label: "Subtítulo", type: "text", half: true },
       { key: "status", label: "Status", type: "select", options: contentStatus, half: true },
-      { key: "content", label: "Blocos (JSON)", type: "json", help: "Estrutura de blocos da página" },
+      { key: "body", label: "Conteúdo (texto)", type: "textarea", help: "Escreva normalmente. Separe parágrafos com uma linha em branco." },
       { key: "seo", label: "SEO (JSON)", type: "json", help: 'ex.: {"description":"..."}' },
     ],
   },

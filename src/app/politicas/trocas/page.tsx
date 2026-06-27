@@ -1,32 +1,26 @@
 import type { Metadata } from "next";
+import { getPage } from "@/lib/site";
 import { PageShell, PageHero } from "@/components/site/PageShell";
+import { Prose } from "@/components/site/Prose";
 
 export const metadata: Metadata = { title: "Trocas e Devoluções" };
+export const dynamic = "force-dynamic";
 
-export default function TrocasPage() {
+const FALLBACK = `Queremos que cada presente chegue perfeito. Se algo não estiver como você esperava, estamos aqui para resolver com carinho.
+
+Prazo de arrependimento: você pode solicitar a devolução em até 7 dias corridos após o recebimento, conforme o Código de Defesa do Consumidor, para produtos sem personalização.
+
+Produtos personalizados: itens com gravação, brasão ou arte exclusiva não são elegíveis para devolução por arrependimento, exceto em caso de defeito de fabricação.
+
+Como solicitar: acesse Meu Baú → Meus Pedidos ou fale com nosso atendimento.`;
+
+export default async function TrocasPage() {
+  const page = await getPage("trocas");
   return (
     <PageShell>
-      <PageHero kicker="Políticas" title="Trocas e Devoluções" />
-      <div className="mx-auto max-w-[760px] space-y-5 px-6 py-14 text-sm leading-relaxed text-marfim/70">
-        <p>
-          Queremos que cada presente chegue perfeito. Se algo não estiver como você esperava, estamos
-          aqui para resolver com carinho.
-        </p>
-        <h3 className="font-serif text-lg text-marfim">Prazo de arrependimento</h3>
-        <p>
-          Você pode solicitar a devolução em até 7 dias corridos após o recebimento, conforme o Código
-          de Defesa do Consumidor, para produtos sem personalização.
-        </p>
-        <h3 className="font-serif text-lg text-marfim">Produtos personalizados</h3>
-        <p>
-          Itens com gravação, brasão ou arte exclusiva não são elegíveis para devolução por
-          arrependimento, exceto em caso de defeito de fabricação.
-        </p>
-        <h3 className="font-serif text-lg text-marfim">Como solicitar</h3>
-        <p>
-          Acesse <strong className="text-dourado">Meu Baú → Meus Pedidos</strong> ou fale com nosso
-          atendimento. Cuidaremos de cada etapa: solicitação, análise, aprovação e reembolso.
-        </p>
+      <PageHero kicker={page?.subtitle ?? "Políticas"} title={page?.title ?? "Trocas e Devoluções"} />
+      <div className="mx-auto max-w-[760px] px-6 py-14">
+        <Prose body={page?.body || FALLBACK} />
       </div>
     </PageShell>
   );

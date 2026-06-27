@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminPageHeader, DataTable, Pill } from "@/components/admin/AdminUI";
 import { RowActions } from "@/components/admin/RowActions";
@@ -5,6 +7,13 @@ import { RowActions } from "@/components/admin/RowActions";
 export const dynamic = "force-dynamic";
 
 const tone: Record<string, "good" | "warn" | "neutral"> = { published: "good", draft: "warn", archived: "neutral" };
+
+// onde a página aparece no site público
+function publicHref(slug: string) {
+  if (slug === "sobre") return "/sobre";
+  if (slug === "trocas") return "/politicas/trocas";
+  return `/p/${slug}`;
+}
 
 export default async function AdminConteudo() {
   const supabase = await createClient();
@@ -28,6 +37,11 @@ export default async function AdminConteudo() {
             { key: "title", label: "Página", render: (r) => <span className="text-marfim">{r.title as string}</span> },
             { key: "slug", label: "Slug", render: (r) => <code className="text-xs text-dourado/70">/{r.slug as string}</code> },
             { key: "status", label: "Status", render: (r) => <Pill tone={tone[r.status as string] ?? "neutral"}>{r.status as string}</Pill> },
+            { key: "ver", label: "", render: (r) => (
+                <Link href={publicHref(r.slug as string)} target="_blank" className="inline-flex items-center gap-1 text-[11px] uppercase tracking-brand text-dourado/70 hover:text-dourado">
+                  <ExternalLink size={13} /> Ver
+                </Link>
+              ) },
             { key: "acoes", label: "", render: (r) => <RowActions table="pages" id={r.id as string} listPath="/admin/conteudo" editHref={`/admin/conteudo/${r.id}/editar`} /> },
           ]}
         />

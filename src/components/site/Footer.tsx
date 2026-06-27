@@ -1,16 +1,19 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { brand } from "@/lib/brand";
+import { getSiteSettings } from "@/lib/site";
+import { brl } from "@/lib/format";
 import { Truck, ShieldCheck, MessageCircleHeart, Sparkles } from "lucide-react";
 
-const perks = [
-  { icon: Truck, title: "Frete Grátis", desc: "Acima de R$ 299" },
-  { icon: ShieldCheck, title: "Embalagem Segura", desc: "Chega perfeita até você" },
-  { icon: MessageCircleHeart, title: "Atendimento Premium", desc: "Fale com nossa equipe" },
-  { icon: Sparkles, title: "Presente com Mensagem", desc: "Inclua seu carinho" },
-];
+export async function Footer() {
+  const settings = await getSiteSettings();
+  const perks = [
+    { icon: Truck, title: "Frete Grátis", desc: `Acima de ${brl(settings.shipping.free_above_cents)}` },
+    { icon: ShieldCheck, title: "Embalagem Segura", desc: "Chega perfeita até você" },
+    { icon: MessageCircleHeart, title: "Atendimento Premium", desc: "Fale com nossa equipe" },
+    { icon: Sparkles, title: "Presente com Mensagem", desc: "Inclua seu carinho" },
+  ];
 
-export function Footer() {
   return (
     <footer className="bg-atelier">
       <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-6 border-y border-dourado/12 px-6 py-8 md:grid-cols-4">
@@ -29,7 +32,7 @@ export function Footer() {
         <div>
           <Logo stacked={false} size={46} />
           <p className="mt-5 max-w-xs font-serif text-lg leading-relaxed text-marfim/70">
-            “{brand.slogan}”
+            “{settings.brand.slogan}”
           </p>
         </div>
         <FooterCol
