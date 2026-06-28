@@ -87,20 +87,20 @@ export function Logo({
     <div
       className={
         stacked
-          ? "flex flex-col items-center gap-1 text-center"
+          ? "flex flex-col items-center gap-2 text-center"
           : "flex items-center gap-3"
       }
     >
       {cleanImageUrl ? (
         <span
-          className="flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-dourado/25 bg-carvao-deep/70 p-1.5"
+          className="flex shrink-0 items-center justify-center overflow-visible"
           style={{ width: size, height: size }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={cleanImageUrl}
             alt=""
-            className="h-full w-full object-contain"
+            className="block max-h-full max-w-full object-contain"
             loading="eager"
             decoding="async"
           />

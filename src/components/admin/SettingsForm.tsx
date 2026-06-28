@@ -21,6 +21,20 @@ export function SettingsForm({
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  async function saveBrand(next: Brand) {
+    setB(next);
+    setSaving(true);
+    setError(null);
+    const result = await saveSetting("brand", next);
+    setSaving(false);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
   async function save() {
     setSaving(true);
     setError(null);
@@ -48,13 +62,24 @@ export function SettingsForm({
 
             <div>
               <span className="mb-1.5 block text-[11px] uppercase tracking-brand text-marfim/55">Logotipo</span>
-              <ImageUpload value={b.logo_url ?? null} onChange={(v) => setB({ ...b, logo_url: v ?? "" })} folder="brand" />
-              <span className="mt-1 block text-[11px] text-marfim/35">Imagem do logo (opcional).</span>
+              <ImageUpload
+                value={b.logo_url ?? null}
+                onChange={(v) => {
+                  const logoUrl = v ?? "";
+                  saveBrand({
+                    ...b,
+                    logo_url: logoUrl,
+                    favicon_url: b.favicon_url || logoUrl,
+                  });
+                }}
+                folder="brand"
+              />
+              <span className="mt-1 block text-[11px] text-marfim/35">Imagem do logo. Ao enviar, ela ja passa a ser usada no site.</span>
             </div>
 
             <div>
               <span className="mb-1.5 block text-[11px] uppercase tracking-brand text-marfim/55">Favicon (ícone da aba)</span>
-              <ImageUpload value={b.favicon_url ?? null} onChange={(v) => setB({ ...b, favicon_url: v ?? "" })} folder="brand" />
+              <ImageUpload value={b.favicon_url ?? null} onChange={(v) => saveBrand({ ...b, favicon_url: v ?? "" })} folder="brand" />
               <span className="mt-1 block text-[11px] text-marfim/35">Ícone que aparece na aba do navegador. Ideal: PNG/SVG quadrado. Vazio = brasão padrão.</span>
             </div>
           </div>

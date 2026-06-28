@@ -15,6 +15,12 @@ export async function saveSetting(key: string, value: unknown): Promise<Result> 
     .upsert({ key, value: value as never, updated_at: new Date().toISOString() } as never);
   if (error) return { error: error.message };
   revalidatePath("/admin/config");
+  if (key === "brand") {
+    revalidatePath("/", "layout");
+    revalidatePath("/");
+    revalidatePath("/entrar");
+    revalidatePath("/cadastro");
+  }
   return { ok: true };
 }
 
