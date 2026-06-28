@@ -30,7 +30,13 @@ export async function Footer() {
 
       <div className="mx-auto grid max-w-[1400px] gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Logo stacked={false} size={46} />
+          <Logo
+            stacked={false}
+            size={46}
+            imageUrl={settings.brand.logo_url}
+            name={settings.brand.name}
+            tagline={settings.brand.tagline}
+          />
           <p className="mt-5 max-w-xs font-serif text-lg leading-relaxed text-marfim/70">
             “{settings.brand.slogan}”
           </p>

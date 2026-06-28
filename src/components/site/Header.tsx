@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Heart, ShoppingBag, User, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { useCart } from "@/lib/cart/CartContext";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { createClient } from "@/lib/supabase/client";
+
+type HeaderBrand = {
+  name?: string;
+  tagline?: string;
+  logo_url?: string;
+};
 
 const nav = [
   { label: "Home", href: "/" },
@@ -20,12 +27,39 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [siteBrand, setSiteBrand] = useState<HeaderBrand | null>(null);
   const { count } = useCart();
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createClient();
+
+    supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "brand")
+      .maybeSingle()
+      .then((result) => {
+        if (!active) return;
+        const row = result.data as { value?: HeaderBrand } | null;
+        setSiteBrand(row?.value ?? null);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-dourado/12 bg-carvao-deep/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4">
         <Link href="/" aria-label="Maison Kranich">
-          <Logo size={40} />
+          <Logo
+            size={40}
+            imageUrl={siteBrand?.logo_url}
+            name={siteBrand?.name}
+            tagline={siteBrand?.tagline}
+          />
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">

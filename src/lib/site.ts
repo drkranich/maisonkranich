@@ -2,13 +2,25 @@ import { createClient } from "@/lib/supabase/server";
 import { brand as defaults } from "@/lib/brand";
 
 export type SiteSettings = {
-  brand: { name: string; tagline: string; slogan: string };
+  brand: {
+    name: string;
+    tagline: string;
+    slogan: string;
+    logo_url: string;
+    favicon_url: string;
+  };
   contact: { email: string; whatsapp: string };
   shipping: { free_above_cents: number };
 };
 
 const FALLBACK: SiteSettings = {
-  brand: { name: defaults.name, tagline: defaults.tagline, slogan: defaults.slogan },
+  brand: {
+    name: defaults.name,
+    tagline: defaults.tagline,
+    slogan: defaults.slogan,
+    logo_url: "",
+    favicon_url: "",
+  },
   contact: { email: "contato@maisonkranich.com", whatsapp: "" },
   shipping: { free_above_cents: 29900 },
 };
@@ -18,7 +30,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   try {
     const supabase = await createClient();
     const { data } = await supabase.from("site_settings").select("key, value");
-    const map = Object.fromEntries((data ?? []).map((s) => [s.key as string, s.value]));
+    const rows = (data ?? []) as Array<{ key: string; value: unknown }>;
+    const map = Object.fromEntries(rows.map((s) => [s.key, s.value]));
     return {
       brand: { ...FALLBACK.brand, ...((map.brand as object) ?? {}) },
       contact: { ...FALLBACK.contact, ...((map.contact as object) ?? {}) },
