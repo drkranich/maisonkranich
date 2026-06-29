@@ -15,6 +15,7 @@ type Props = {
   listPath: string;
   id: string | null;
   title: string;
+  defaults?: Record<string, unknown>;
   dynamicOptions?: Record<string, { value: string; label: string }[]>;
 };
 
@@ -28,7 +29,7 @@ function toInputValue(field: Field, v: unknown): string {
   return String(v);
 }
 
-export function CrudForm({ fields, initial, table, listPath, id, title, dynamicOptions }: Props) {
+export function CrudForm({ fields, initial, table, listPath, id, title, defaults, dynamicOptions }: Props) {
   const router = useRouter();
   const [state, setState] = useState<Record<string, string | boolean | string[]>>(() => {
     const s: Record<string, string | boolean | string[]> = {};
@@ -48,7 +49,7 @@ export function CrudForm({ fields, initial, table, listPath, id, title, dynamicO
   }
 
   function coerce(): Record<string, unknown> | null {
-    const out: Record<string, unknown> = {};
+    const out: Record<string, unknown> = { ...(defaults ?? {}) };
     for (const f of fields) {
       const raw = state[f.key];
       try {

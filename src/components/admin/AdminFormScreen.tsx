@@ -41,6 +41,7 @@ export async function AdminFormScreen({ entity, id }: { entity: string; id?: str
       listPath={ent.list}
       id={id ?? null}
       title={ent.singular}
+      defaults={ent.defaults}
       dynamicOptions={dynamicOptions}
     />
   );

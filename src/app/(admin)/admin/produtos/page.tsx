@@ -14,7 +14,7 @@ export default async function AdminProdutos() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("id, name, kind, price_cents, stock, active, featured, images")
+    .select("id, name, kind, price_cents, stock, active, featured, images, measurements, compatible_product_types, special_occasions")
     .order("created_at", { ascending: false });
 
   const rows = data ?? [];
@@ -39,6 +39,11 @@ export default async function AdminProdutos() {
           } },
           { key: "name", label: "Nome", render: (r) => <span className="text-marfim">{r.name as string}</span> },
           { key: "kind", label: "Tipo", render: (r) => <Pill tone="gold">{kindLabels[r.kind as string] ?? (r.kind as string)}</Pill> },
+          { key: "measurements", label: "Medidas", render: (r) => String(r.measurements ?? "—") },
+          { key: "compatible_product_types", label: "Combina com", render: (r) => {
+            const items = Array.isArray(r.compatible_product_types) ? r.compatible_product_types as string[] : [];
+            return items.length ? items.slice(0, 2).join(", ") : "—";
+          } },
           { key: "price_cents", label: "Preço", render: (r) => brl(r.price_cents as number) },
           { key: "stock", label: "Estoque", render: (r) => (Number(r.stock) <= 5 ? <span className="text-red-300">{String(r.stock)}</span> : String(r.stock)) },
           { key: "active", label: "Status", render: (r) => (r.active ? <Pill tone="good">Ativo</Pill> : <Pill tone="bad">Inativo</Pill>) },

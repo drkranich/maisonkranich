@@ -16,6 +16,10 @@ type Supplier = {
   website_url: string | null;
   phone: string | null;
   email: string | null;
+  product_measurements: string | null;
+  packaging_use: string | null;
+  compatible_product_types: string[];
+  special_occasions: string[];
   active: boolean;
 };
 
@@ -72,7 +76,7 @@ export default async function AdminFornecedores() {
   const [{ data: suppliersData }, { data: productsData }, { data: ordersData }] = await Promise.all([
     supabase
       .from("suppliers" as never)
-      .select("id, name, product_type, contact_name, social_url, website_url, phone, email, active")
+      .select("id, name, product_type, contact_name, social_url, website_url, phone, email, product_measurements, packaging_use, compatible_product_types, special_occasions, active")
       .order("created_at", { ascending: false }),
     supabase
       .from("products")
@@ -116,6 +120,11 @@ export default async function AdminFornecedores() {
             columns={[
               { key: "name", label: "Fornecedor", render: (r) => <span className="text-marfim">{r.name as string}</span> },
               { key: "product_type", label: "Tipo", render: (r) => <Pill tone="gold">{r.product_type as string}</Pill> },
+              { key: "product_measurements", label: "Medidas", render: (r) => String(r.product_measurements ?? "—") },
+              { key: "compatible_product_types", label: "Combina com", render: (r) => {
+                const items = Array.isArray(r.compatible_product_types) ? r.compatible_product_types as string[] : [];
+                return items.length ? items.slice(0, 2).join(", ") : "—";
+              } },
               { key: "contact_name", label: "Contato", render: (r) => String(r.contact_name ?? "—") },
               { key: "phone", label: "Fone", render: (r) => String(r.phone ?? "—") },
               { key: "email", label: "E-mail", render: (r) => String(r.email ?? "—") },
