@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/admin/Sidebar";
 import { MessageSquare, Search, Store, LogOut } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { getSiteSettings } from "@/lib/site";
 
 const roleLabels: Record<string, string> = {
   owner: "Superadministrador",
@@ -17,6 +18,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const profile = await requireStaff();
+  const settings = await getSiteSettings();
   const name = profile.full_name || profile.email || "Equipe";
   const roleLabel = roleLabels[profile.role as string] ?? "Administrador";
   const avatar = (profile as { avatar_url?: string | null }).avatar_url ?? null;
@@ -24,7 +26,13 @@ export default async function AdminLayout({
   return (
     <div className="flex bg-atelier">
       <div className="sticky top-0 hidden lg:block">
-        <Sidebar />
+        <Sidebar
+          brand={{
+            name: settings.brand.name,
+            tagline: settings.brand.tagline,
+            logo_url: settings.brand.logo_url,
+          }}
+        />
       </div>
 
       <div className="flex min-h-screen flex-1 flex-col">

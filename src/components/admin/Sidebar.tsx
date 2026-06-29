@@ -6,10 +6,9 @@ import {
   LayoutDashboard, ShoppingBag, Package, Box, Layers, FolderTree,
   Users, Repeat, Crown, CreditCard, BadgePercent, Sparkles, MessagesSquare,
   FolderOpen, Wand2, FileText, Newspaper, BarChart3, Megaphone,
-  Settings, ShieldCheck, ScrollText,
+  Settings, ShieldCheck, ScrollText, Handshake,
 } from "lucide-react";
-import { Crest } from "@/components/ui/Logo";
-import { brand } from "@/lib/brand";
+import { Logo } from "@/components/ui/Logo";
 
 const groups: { items: { label: string; href: string; icon: React.ElementType; tag?: string }[] }[] = [
   {
@@ -17,6 +16,7 @@ const groups: { items: { label: string; href: string; icon: React.ElementType; t
       { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
       { label: "Pedidos", href: "/admin/pedidos", icon: ShoppingBag },
       { label: "Produtos", href: "/admin/produtos", icon: Package },
+      { label: "Fornecedores", href: "/admin/fornecedores", icon: Handshake },
       { label: "Caixas", href: "/admin/caixas", icon: Box },
       { label: "Coleções", href: "/admin/colecoes", icon: Layers },
       { label: "Categorias", href: "/admin/categorias", icon: FolderTree },
@@ -40,20 +40,20 @@ const groups: { items: { label: string; href: string; icon: React.ElementType; t
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({
+  brand,
+}: {
+  brand: {
+    name: string;
+    tagline: string;
+    logo_url: string;
+  };
+}) {
   const path = usePathname();
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-dourado/12 bg-carvao-deep">
       <div className="flex flex-col items-center gap-2 border-b border-dourado/12 px-6 py-6">
-        <Crest size={44} />
-        <div className="text-center">
-          <div className="font-serif text-lg tracking-brand text-marfim">
-            {brand.name.toUpperCase()}
-          </div>
-          <div className="text-[9px] uppercase tracking-wide2 text-dourado/70">
-            {brand.tagline}
-          </div>
-        </div>
+        <Logo stacked size={56} imageUrl={brand.logo_url} name={brand.name} tagline={brand.tagline} />
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">

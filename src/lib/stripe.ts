@@ -1,9 +1,46 @@
 /**
- * Integração Stripe via API REST (fetch) — sem SDK, compatível com Cloudflare Workers.
+ * Integracao Stripe via API REST (fetch), compativel com Cloudflare Workers.
  */
+
+const STRIPE_API_VERSION = "2026-02-25.clover";
 
 export function stripeConfigured() {
   return !!process.env.STRIPE_SECRET_KEY;
+}
+
+async function stripePost<T>(path: string, params: URLSearchParams): Promise<T> {
+  const key = process.env.STRIPE_SECRET_KEY!;
+  const res = await fetch(`https://api.stripe.com${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Stripe-Version": STRIPE_API_VERSION,
+    },
+    body: params.toString(),
+  });
+
+  const json = (await res.json()) as T & { error?: { message?: string } };
+  if (!res.ok) {
+    throw new Error(json.error?.message ?? "Falha na comunicacao com a Stripe.");
+  }
+  return json;
+}
+
+export async function stripeGet<T>(path: string): Promise<T> {
+  const key = process.env.STRIPE_SECRET_KEY!;
+  const res = await fetch(`https://api.stripe.com${path}`, {
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Stripe-Version": STRIPE_API_VERSION,
+    },
+  });
+
+  const json = (await res.json()) as T & { error?: { message?: string } };
+  if (!res.ok) {
+    throw new Error(json.error?.message ?? "Falha na comunicacao com a Stripe.");
+  }
+  return json;
 }
 
 type SessionInput = {
@@ -14,9 +51,8 @@ type SessionInput = {
   items: { name: string; unit_amount: number; quantity: number }[];
 };
 
-/** Cria uma Stripe Checkout Session (hospedada) e devolve a URL de pagamento. */
+/** Cria uma Stripe Checkout Session hospedada e devolve a URL de pagamento. */
 export async function createCheckoutSession(input: SessionInput): Promise<string> {
-  const key = process.env.STRIPE_SECRET_KEY!;
   const params = new URLSearchParams();
   params.set("mode", "payment");
   params.set("success_url", `${input.origin}/checkout/obrigado?numero=${input.orderNumber}`);
@@ -34,19 +70,8 @@ export async function createCheckoutSession(input: SessionInput): Promise<string
     params.set(`line_items[${i}][price_data][product_data][name]`, it.name);
   });
 
-  const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params.toString(),
-  });
-
-  const json = (await res.json()) as { url?: string; error?: { message?: string } };
-  if (!res.ok || !json.url) {
-    throw new Error(json.error?.message ?? "Falha ao criar sessão de pagamento.");
-  }
+  const json = await stripePost<{ url?: string; error?: { message?: string } }>("/v1/checkout/sessions", params);
+  if (!json.url) throw new Error(json.error?.message ?? "Falha ao criar sessao de pagamento.");
   return json.url;
 }
 
@@ -58,9 +83,8 @@ type SubscriptionInput = {
   customerEmail?: string;
 };
 
-/** Cria uma Checkout Session em modo assinatura (recorrente) a partir de um price id. */
+/** Cria uma Checkout Session em modo assinatura a partir de um price id. */
 export async function createSubscriptionSession(input: SubscriptionInput): Promise<string> {
-  const key = process.env.STRIPE_SECRET_KEY!;
   const params = new URLSearchParams();
   params.set("mode", "subscription");
   params.set("success_url", `${input.origin}/conta/assinaturas?ok=1`);
@@ -75,19 +99,21 @@ export async function createSubscriptionSession(input: SubscriptionInput): Promi
   params.set("line_items[0][price]", input.priceId);
   params.set("line_items[0][quantity]", "1");
 
-  const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params.toString(),
-  });
+  const json = await stripePost<{ url?: string; error?: { message?: string } }>("/v1/checkout/sessions", params);
+  if (!json.url) throw new Error(json.error?.message ?? "Falha ao criar assinatura.");
+  return json.url;
+}
 
-  const json = (await res.json()) as { url?: string; error?: { message?: string } };
-  if (!res.ok || !json.url) {
-    throw new Error(json.error?.message ?? "Falha ao criar assinatura.");
-  }
+export async function createCustomerPortalSession(input: {
+  customerId: string;
+  returnUrl: string;
+}): Promise<string> {
+  const params = new URLSearchParams();
+  params.set("customer", input.customerId);
+  params.set("return_url", input.returnUrl);
+
+  const json = await stripePost<{ url?: string; error?: { message?: string } }>("/v1/billing_portal/sessions", params);
+  if (!json.url) throw new Error(json.error?.message ?? "Falha ao abrir o portal da assinatura.");
   return json.url;
 }
 
@@ -122,7 +148,6 @@ export async function verifyStripeSignature(
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
 
-    // comparação de tempo (aproximadamente) constante
     if (expected.length !== v1.length) return false;
     let diff = 0;
     for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ v1.charCodeAt(i);

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth";
 import { brl, dateBR } from "@/lib/format";
 import { PageTitle, EmptyState } from "@/components/account/AccountUI";
+import { ManageSubscriptionButton } from "@/components/subscriptions/ManageSubscriptionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -46,9 +47,12 @@ export default async function AssinaturasPage() {
                     {s.current_period_end ? ` · próxima cobrança em ${dateBR(s.current_period_end)}` : ""}
                   </div>
                 </div>
-                <span className="rounded-full bg-musgo/40 px-3 py-1 text-[10px] uppercase tracking-wide text-dourado-soft">
-                  {statusLabels[s.status] ?? s.status}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-musgo/40 px-3 py-1 text-[10px] uppercase tracking-wide text-dourado-soft">
+                    {statusLabels[s.status] ?? s.status}
+                  </span>
+                  <ManageSubscriptionButton />
+                </div>
               </div>
             );
           })}

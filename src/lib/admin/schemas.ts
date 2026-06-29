@@ -55,6 +55,23 @@ const productFields = (includeKind: boolean): Field[] => [
 ];
 
 export const entities: Record<string, Entity> = {
+  fornecedores: {
+    table: "suppliers",
+    singular: "Fornecedor",
+    list: "/admin/fornecedores",
+    defaults: { active: true },
+    fields: [
+      { key: "name", label: "Nome do fornecedor", type: "text", required: true, half: true },
+      { key: "product_type", label: "Tipo de produto", type: "text", required: true, half: true, help: "ex.: caixas, laços, papelaria, gourmet, flores" },
+      { key: "contact_name", label: "Contato principal", type: "text", half: true },
+      { key: "phone", label: "Telefone / WhatsApp", type: "text", half: true },
+      { key: "email", label: "E-mail", type: "text", half: true },
+      { key: "social_url", label: "Rede social", type: "text", half: true },
+      { key: "website_url", label: "Site", type: "text", half: true },
+      { key: "notes", label: "Observações", type: "textarea" },
+      { key: "active", label: "Ativo", type: "bool", half: true },
+    ],
+  },
   produtos: {
     table: "products",
     singular: "Produto",
